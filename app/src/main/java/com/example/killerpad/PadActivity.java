@@ -18,6 +18,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.killerpad.comunications.Handler;
+import com.example.killerpad.comunications.KillerAction;
+import com.example.killerpad.comunications.Message;
+
 public class PadActivity extends AppCompatActivity implements JoystickView.JoystickListener,  View.OnClickListener {
 
     private Handler handler;
@@ -331,7 +335,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         //Método callback para ser notificado de los mensajes de dirección del joystick
         Log.d("move", direction);
         //handler.sendMessage("pad:" + direction);
-        handler.sendMessage(direction);
+        handler.sendKillerAction(Message.MOVEMENT_COMMAND, 1,1);
     }
 
     @Override
@@ -348,7 +352,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
             } else if (clickedButtonID == R.id.botonCancelRestart) {
                 sayBye();
             } else if (clickedButtonID == R.id.botonRestart) {
-                handler.sendMessage("replay");
+                //handler.sendMessage("replay");
                 resetBoard();
                 restart.hide();
             }else if(clickedButtonID == R.id.spcancel){
