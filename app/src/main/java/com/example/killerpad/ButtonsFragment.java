@@ -1,13 +1,12 @@
 package com.example.killerpad;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import com.example.killerpad.comunications.Handler;
 
 public class ButtonsFragment extends Fragment implements View.OnClickListener {
 
@@ -50,11 +49,11 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
 
         //botón KillMe (desactivado)
         if (button == R.id.killMe) {
-            //this.handler.sendMessage("replay");
+            this.handler.sendMessage("replay");
 
         //botón de disparo
         } else if (button == R.id.send) {
-            //this.handler.sendMessage("shoot");
+            this.handler.sendMessage("shoot");
 
         }
 
