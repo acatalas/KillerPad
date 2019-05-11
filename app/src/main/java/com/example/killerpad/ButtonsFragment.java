@@ -1,6 +1,5 @@
 package com.example.killerpad;
 
-import com.example.killerpad.comunications.*;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.example.killerpad.comunications.Handler;
+import com.example.killerpad.comunications.Message;
 
 public class ButtonsFragment extends Fragment implements View.OnClickListener {
 
@@ -48,8 +50,14 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
 
         int button = v.getId();
 
-         if (button == R.id.send) {
+        //botón KillMe (desactivado)
+        if (button == R.id.killMe) {
+            this.handler.sendKillerAction(Message.DEATH_COMMAND);
+
+        //botón de disparo
+        } else if (button == R.id.send) {
             this.handler.sendKillerAction(Message.SHOOT_COMMAND);
+
         }
 
     }

@@ -191,7 +191,7 @@ public class Handler implements Runnable {
                 .withConnection(ConnectionResponse.Builder.builder()
                         .withColor(color)
                         .withUserName(user)
-                        .withShipType("1").build())
+                        .withShipType("FAST").build())
                 .build();
 
         //Convierte el mensaje a JSON
