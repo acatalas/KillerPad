@@ -25,8 +25,6 @@ public class Handler implements Runnable {
     private boolean alive;
     public boolean connected;
 
-    private static String TAG = "handler";
-
     public Handler(PadActivity activity, String user, String ip, int port) {
         this.padA = activity;
         this.user = user;
@@ -40,7 +38,7 @@ public class Handler implements Runnable {
         this.alive = alive;
     }
 
-    public void setConnection() {
+    private void setConnection() {
 
         // Mientras no hay conexión intentar conectarse...
         while (this.socket == null) {
@@ -57,6 +55,7 @@ public class Handler implements Runnable {
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+            socket.setSoTimeout(3500);
         } catch (IOException e) {
             socket = null;
             e.printStackTrace();
@@ -80,13 +79,18 @@ public class Handler implements Runnable {
             try {
                 //Con el método listenServer escucha e interpreta los mensajes del servidor.
                 listenServer();
+                sendTimeoutMessage();
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
-                Log.d(TAG, "handler run excepcion");
+
+                Log.d("ERROR", "Interrupted exception:\n" + e.toString());
             }
         }
 
+    }
+
+    private void sendTimeoutMessage() {
+        out.println(Message.STATUS_REQUEST);
     }
 
     //Método que se invoca cuando se recibe el mensaje "ded" para indicar la muerte del usuario.
@@ -129,21 +133,19 @@ public class Handler implements Runnable {
         out.println(Message.DISCONNECTION_COMMAND);
     }
 
-    public void listenServer() {
+    private void listenServer() {
 
         try {
             String data = this.in.readLine();
 
-            Log.d(TAG, data);
-
             // Si el mensaje no es null se procesa.
             if (data != null) {
-                Log.d(TAG, "datos recibidos = " + data);
+                Log.d("DATA_RECIEVED", data);
                 processGameMessage(data);
             }
         } catch (IOException e) {
             //Si salta excepción se notifica al user.
-            Log.d(TAG, "handler listenServer: IOexception!!!!");
+            Log.d("ERROR", "handler listenServer: IOexception!!!!");
             this.padA.alertUser();//OK
         }
     }
@@ -196,7 +198,7 @@ public class Handler implements Runnable {
 
         //Convierte el mensaje a JSON
         String json = Message.convertMessageToJson(message);
-        Log.d("JSON", json);
+        Log.d("DATA_SENT", json);
         out.println(json);
     }
 
@@ -207,7 +209,7 @@ public class Handler implements Runnable {
                 .build();
 
         String json = Message.convertMessageToJson(message);
-        Log.d("JSON", json);
+        Log.d("DATA_SENT", json);
 
         out.println(json);
     }
@@ -221,7 +223,7 @@ public class Handler implements Runnable {
                 .build();
 
         String json = Message.convertMessageToJson(message);
-        Log.d("JSON", json);
+        Log.d("DATA_SENT", json);
 
         out.println(json);
     }
