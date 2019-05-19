@@ -23,6 +23,7 @@ public class ShipView extends SurfaceView implements SurfaceHolder.Callback, Vie
     private float centerY;
     private float baseRadius;
     private String sColor;
+    private String sShip;
     Canvas myCanvas;
 
     public ShipView(Context context) {
@@ -36,6 +37,7 @@ public class ShipView extends SurfaceView implements SurfaceHolder.Callback, Vie
         //su valor por defecto es "fffff" (color blanco)
         SharedPreferences pref = getContext().getSharedPreferences("savedPrefs", Context.MODE_PRIVATE);
         this.sColor = pref.getString("color", "ffffff");
+        this.sShip = pref.getString("ship", "balancedShip");
 
 
         //si ya tiene "holder" (SurfaceHolder) le añadimos el que tiene la clase.
@@ -54,6 +56,12 @@ public class ShipView extends SurfaceView implements SurfaceHolder.Callback, Vie
     public void updateColor(String newColor){
         //cambia el color con el que se pintara la nave y actualiza el canvas
         this.sColor = newColor;
+        drawCanvas(centerX,centerY);
+    }
+
+    public void updateShip(String newShip){
+        //Cambia la nave y actualiza el canvas
+        this.sShip = newShip;
         drawCanvas(centerX,centerY);
     }
 

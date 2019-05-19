@@ -7,16 +7,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.example.killerpad.colorpicker.ColorPickerDialog;
-import com.example.killerpad.colorpicker.OnColorChangedListener;
+import android.widget.Toast;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -32,9 +29,11 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     private Bundle sis;
     private Button goToPad;
     private Button bColorPicker;
+    private Button bShipPicker;
 
     //Dialogs
-    private ColorPickerDialog colorDialog;
+    private Dialog colorDialog;
+    private Dialog shipDialog;
     private Dialog configurationDialog;
 
 
@@ -78,6 +77,17 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
             }
         });
 
+        // almacenamos el boton para elegir que nave queremos
+        this.bShipPicker = (Button) v.findViewById(R.id.buttonScores);
+
+        // añade el listener en el boton
+        this.bShipPicker.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                showShipPickerDialog();
+            }
+        });
+
         return v;
     }
 
@@ -118,6 +128,25 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         }
 
 
+    }
+
+    private void acceptShip(){
+        ShipView shipView = ((ShipView) ((MenuActivity)getActivity()).findViewById(R.id.shipView));
+        shipView.updateShip((String) getContext().getSharedPreferences("savedPrefs",Context.MODE_PRIVATE).getString("color", "balancedShip"));
+    }
+    private void addShipListeners(){
+
+        // Almacenamos en un ArrayList los diversos tipos de naves con las que podremos jugar
+
+        ArrayList<Button> arrShips = new ArrayList<>();
+
+        arrShips.add((Button) this.shipDialog.findViewById(R.id.lightShip));
+        arrShips.add((Button) this.shipDialog.findViewById(R.id.balancedShip));
+        arrShips.add((Button) this.shipDialog.findViewById(R.id.heavyShip));
+
+        for (int button = 0; button < arrShips.size(); button++) {
+            arrShips.get(button).setOnClickListener(this);
+        }
     }
 
     public void connectPadActivity(View v){
@@ -202,21 +231,20 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         //Inicializa el atributo de clase colorDialog, le establece el layout
         // y llama a addColorListeners() para establecer los listeners a cada uno de sus botones.
 
-        this.colorDialog = new ColorPickerDialog(getContext(),
-                new OnColorChangedListener() {
-                    @Override
-                    public void colorChanged(int color) {
-                        Log.d("COLOR", color + "");
-                    }
-                },
-                0);
-
-        //this.colorDialog.setContentView(R.layout.color_picker);
-        //this.addColorListeners();
+        this.colorDialog = new Dialog(this.getContext());
+        this.colorDialog.setContentView(R.layout.dialog_color_picker);
+        this.addColorListeners();
 
         //muestra el dialogo
         this.colorDialog.show();
 
+    }
+
+    private void showShipPickerDialog(){
+        this.shipDialog = new Dialog(this.getContext());
+        this.shipDialog.setContentView(R.layout.dialog_ship_picker);
+        this.addShipListeners();
+        this.shipDialog.show();
     }
 
     private void showConfigDialog() {
@@ -289,6 +317,23 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
             case R.id.purpleButton:
                 saveConfig("color", "6E28E0");
                 acceptColor();
+                break;
+
+            // dialog de seleccion de naves.
+
+            case R.id.lightShip:
+                saveConfig("ship", "light");
+                acceptShip();
+                break;
+
+            case R.id.balancedShip:
+                saveConfig("ship", "balanced");
+                acceptShip();
+                break;
+
+            case R.id.heavyShip:
+                saveConfig("ship", "heavy");
+                acceptShip();
                 break;
 
 

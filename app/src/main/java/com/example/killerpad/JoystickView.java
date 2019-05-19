@@ -14,8 +14,6 @@ import android.view.View;
 
 public class JoystickView extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener{
 
-
-
     private float centerX;  //coordenada x del que queremos que sea el centro del pad
     private float centerY;  //coordenada y del que queremos que sea el centro del pad
     private float baseRadius; //radio del circulo base

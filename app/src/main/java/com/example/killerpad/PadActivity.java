@@ -53,7 +53,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         // Cargar TopScore de sharedPreferences
         SharedPreferences prefs = getSharedPreferences("savedPrefs", MODE_PRIVATE);
         topScore = Integer.parseInt(prefs.getString("topScore", "0"));
-        //atributo de clase que almacenará la puntuación del jugador en tod.o momento
+        //atributo de clase que almacenará la puntuación del jugador en todo momento
         // (empieza en 0 al ser una nueva partida)
         score = 0;
 
@@ -162,6 +162,12 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
             fm.beginTransaction()
                     .add(R.id.joystick_container, joystick_fragment).commit();
         }
+        Fragment joystick_fragment_shooter = fm.findFragmentById(R.id.buttons_container);
+        if (joystick_fragment_shooter == null) {
+            joystick_fragment_shooter = new JoystickShooterFragment();
+            fm.beginTransaction().add(R.id.buttonsbloc_container, joystick_fragment_shooter).commit();
+        }
+
         Fragment buttons_fragment = fm.findFragmentById(R.id.buttons_container);
         if (buttons_fragment == null) {
             buttons_fragment = new ButtonsFragment();
@@ -324,7 +330,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
 
     @Override
     public void onJoystickMoved(float xPercent, float yPercent, int source) {
-        //  Log.d("move","X: "+xPercent+" Y: "+yPercent);
+        Log.d("move","X: "+xPercent+" Y: "+yPercent);
         //Método para futura implementación.
     }
 

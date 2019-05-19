@@ -32,10 +32,10 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
         this.handler = ((PadActivity) this.getActivity()).getHandler();
 
         //Añade los Listeners a los botones de disparo y kill me
-        this.bSend = v.findViewById(R.id.send);
-        bSend.setOnClickListener(this);
+//        this.bSend = v.findViewById(R.id.send);
+////        bSend.setOnClickListener(this);
 
-        this.bSuicide = v.findViewById(R.id.killMe);
+//        this.bSuicide = v.findViewById(R.id.killMe);
 
         // -- escuchador desactivado --
         //bSuicide.setOnClickListener(this);
@@ -51,14 +51,14 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
         int button = v.getId();
 
         //botón KillMe (desactivado)
-        if (button == R.id.killMe) {
-            this.handler.sendKillerAction(Message.DEATH_COMMAND);
-
-        //botón de disparo
-        } else if (button == R.id.send) {
-            this.handler.sendKillerAction(Message.SHOOT_COMMAND);
-
-        }
+//        if (button == R.id.killMe) {
+//            this.handler.sendKillerAction(Message.DEATH_COMMAND);
+//        }
+//        //botón de disparo
+//        } else if (button == R.id.send) {
+//            this.handler.sendKillerAction(Message.SHOOT_COMMAND);
+//
+//        }
 
     }
 }
