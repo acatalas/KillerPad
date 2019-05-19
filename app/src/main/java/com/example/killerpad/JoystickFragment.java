@@ -17,7 +17,8 @@ public class JoystickFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_joystick, container, false);
-
+        JoystickView joystickView = v.findViewById(R.id.joystick_1);
+        joystickView.setJoystickType(JoystickView.JoystickType.valueOf(getArguments().getString("JoystickType")));
         return v;
     }
 

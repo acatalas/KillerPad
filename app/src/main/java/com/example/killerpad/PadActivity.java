@@ -1,7 +1,6 @@
 package com.example.killerpad;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 
@@ -149,6 +148,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
 
         FragmentManager fm = getSupportFragmentManager();
 
+        //Añade las puntuaciones y el boton de exit al pad
         Fragment board_fragment = fm.findFragmentById(R.id.board_container);
         if (board_fragment == null) {
             board_fragment = new BoardFragment();
@@ -156,20 +156,37 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
                     .add(R.id.board_container, board_fragment).commit();
 
         }
-        Fragment joystick_fragment = fm.findFragmentById(R.id.joystick_container);
-        if (joystick_fragment == null) {
-            joystick_fragment = new JoystickFragment();
+
+        //Añade el joystick de movimiento
+        Fragment joystick_fragment_move = fm.findFragmentById(R.id.joystick_move_container);
+        if (joystick_fragment_move == null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("JoystickType", JoystickView.JoystickType.MOVE.name());
+            joystick_fragment_move = new JoystickFragment();
+            joystick_fragment_move.setArguments(bundle);
             fm.beginTransaction()
-                    .add(R.id.joystick_container, joystick_fragment).commit();
+                    .add(R.id.joystick_move_container, joystick_fragment_move).commit();
         }
-        Fragment joystick_fragment_shooter = fm.findFragmentById(R.id.buttons_container);
-        if (joystick_fragment_shooter == null) {
-            joystick_fragment_shooter = new JoystickShooterFragment();
-            fm.beginTransaction().add(R.id.buttonsbloc_container, joystick_fragment_shooter).commit();
+
+        //Añade el joystick de disparo
+        Fragment joystick_fragment_shoot = fm.findFragmentById(R.id.joystick_shoot_container);
+        if (joystick_fragment_shoot == null) {
+
+            //Crea un bundle para enviar el tipo del joystick
+            Bundle bundle = new Bundle();
+            bundle.putString("JoystickType", JoystickView.JoystickType.SHOOT.name());
+
+            //Añade el bundle al joystickFragment
+            joystick_fragment_shoot = new JoystickFragment();
+            joystick_fragment_shoot.setArguments(bundle);
+            fm.beginTransaction()
+                    .add(R.id.joystick_shoot_container, joystick_fragment_shoot).commit();
         }
 
         Fragment buttons_fragment = fm.findFragmentById(R.id.buttons_container);
         if (buttons_fragment == null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("JoystickType", JoystickView.JoystickType.SHOOT.name());
             buttons_fragment = new ButtonsFragment();
             fm.beginTransaction()
                     .add(R.id.buttons_container, buttons_fragment).commit();
@@ -329,18 +346,14 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
     }
 
     @Override
-    public void onJoystickMoved(float xPercent, float yPercent, int source) {
-        Log.d("move","X: "+xPercent+" Y: "+yPercent);
+    public void onJoystickMoved(float xPercent, float yPercent, JoystickView.JoystickType joystickType) {
+        Log.d("move","X: "+xPercent+" Y: "+yPercent + " SOURCE: " + joystickType);
         //Método para futura implementación.
-    }
-
-    @Override
-    public void directionChanged(String direction) {
-
-        //Método callback para ser notificado de los mensajes de dirección del joystick
-        Log.d("move", direction);
-        handler.sendKillerAction(Message.MOVEMENT_COMMAND, 1, 1);
-        //handler.sendMessage(direction);
+        if(joystickType == JoystickView.JoystickType.MOVE){
+            handler.sendKillerAction(Message.MOVEMENT_COMMAND, xPercent, yPercent);
+        } else {
+            handler.sendKillerAction(Message.SHOOT_COMMAND, xPercent, yPercent);
+        }
     }
 
     @Override

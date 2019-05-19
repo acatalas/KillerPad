@@ -12,7 +12,13 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
-public class JoystickView extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener{
+public class JoystickView extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener {
+
+    public enum JoystickType{
+        MOVE, SHOOT
+    }
+
+    private JoystickType joystickType;
 
     private float centerX;  //coordenada x del que queremos que sea el centro del pad
     private float centerY;  //coordenada y del que queremos que sea el centro del pad
@@ -38,7 +44,7 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
          */
         setOnTouchListener(this);   //le añadimos el ontouchlistener
 
-        if(context instanceof JoystickListener) {   //si el context implementa nuestra interfaz JoystickListener
+        if (context instanceof JoystickListener) {   //si el context implementa nuestra interfaz JoystickListener
 
             callback = (JoystickListener) context; //lo almacenamos en una variable llamada callback.
 
@@ -59,7 +65,7 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
         getHolder().addCallback(this);
         setOnTouchListener(this);
-        if(context instanceof JoystickListener) {
+        if (context instanceof JoystickListener) {
 
             callback = (JoystickListener) context;
         }
@@ -73,30 +79,32 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
         getHolder().addCallback(this);
         setOnTouchListener(this);
-        if(context instanceof JoystickListener) {
+        if (context instanceof JoystickListener) {
 
             callback = (JoystickListener) context;
         }
     }
 
 
-    public void setupDimensions(){
+    public void setupDimensions() {
         centerX = getWidth() / 2;           //centro del ancho donde está contenido
         centerY = getHeight() / 2;          //centro del alto donde está contenido
-        baseRadius = Math.min(getWidth(), getHeight()) / 3.5f;
+
         //agarra el más pequeño: el ancho o el alto y lo divide entre 3.5 para el radio base
-        topRadius = Math.min(getWidth(), getHeight()) / 5.5f;
+        baseRadius = Math.min(getWidth(), getHeight()) / 3.5f;
+
         //agarra el más pequeño: el ancho o el alto y lo divide entre 5.5 para el radio del pad
+        topRadius = Math.min(getWidth(), getHeight()) / 5.5f;
 
         /*con estas proporciones (dividido entre 3.5 y 5.5, el pad nunca se saldrá de su view
         cuando esta siendo pulsado ttodo lo lejos posible*/
 
     }
 
-    private void drawJoystick(float newX, float newY){
+    private void drawJoystick(float newX, float newY) {
 
         //Esta condición mira si el objeto SurfaceView ha sido creado en pantalla.
-        if(getHolder().getSurface().isValid()) {
+        if (getHolder().getSurface().isValid()) {
             //almacena el canvas en variable
             Canvas myCanvas = this.getHolder().lockCanvas();
             //crea nuevo objeto de tipo paint para pintar
@@ -112,7 +120,7 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
             colors.setARGB(255, 150, 150, 150);
             myCanvas.drawCircle(newX, newY, topRadius, colors);
             colors.setARGB(255, 255, 255, 255);
-            myCanvas.drawCircle(newX, newY, topRadius-(topRadius/10), colors);
+            myCanvas.drawCircle(newX, newY, topRadius - (topRadius / 10), colors);
             //le pasamos la variable canvas para que actualice el canvas del surface.
             getHolder().unlockCanvasAndPost(myCanvas);
         }
@@ -121,7 +129,7 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
     @Override
     public void surfaceCreated(SurfaceHolder holder) {  //cuando se crea el surfaceview por primera vez
         setupDimensions();
-        drawJoystick(centerX,centerY);
+        drawJoystick(centerX, centerY);
     }
 
     @Override
@@ -140,122 +148,96 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
         /*el desplazamiento es el teorema de pitagoras tomando como catetos las diferencias
           entre las coordenadas X,Y del centro del pad y las coordenadas X,Y del dedo
           básicamente está calculando el valor del vector unitario utilizando otros dos vectores
-          que representan sus componentes X e Y.
-        */
+          que representan sus componentes X e Y.*/
+        /*EPT (Explicacion Para Tontos (como yo):
+        Calcula la distancia entre el centro del joystick y el lugar donde se ha producido el evento*/
         float displacement = (float) Math.sqrt(Math.pow(event.getX() - centerX, 2) + Math.pow(event.getY() - centerY, 2));
 
         //si el movimiento no es levantar el dedo de la pantalla
-            if (event.getAction() != event.ACTION_UP) {
-                //y si el desplazamiento es menor al radio del circulo que es la base del joystick
-                if(displacement < baseRadius) {
-                    x = event.getX();   //la coordenada x es la misma que la del dedo
-                    y = event.getY();   //la coordenada y es la misma que la del dedo
+        if (event.getAction() != event.ACTION_UP) {
 
+            /*y si el desplazamiento es menor al radio del circulo que es la base del joystick
+            (EPT: si el evento se ha producido dentro del circulo de la base del joystick)*/
+            if (displacement < baseRadius) {
+                x = event.getX();   //la coordenada x es la misma que la del dedo
+                y = event.getY();   //la coordenada y es la misma que la del dedo
 
-                }else{ //si por el contrario, el desplazamiento es mayor al radio del circulo base...
-                    /*
-                    Para esto hayaremos la proporción que hay entre el radio y el desplazamiento
-                    Conociendo esta proporción  y la distancia total de un centro a una coordenada del dedo
-                    Si multiplicamos ambos el resultado será una coordenada restringida entre el centro
-                    de ese componente(X o Y) y la componente(X o Y) del circulo base.
-                    Lo que estamos haciendo es hacer la coordenada proporcional a esa distancia.
+                /*si por el contrario, el desplazamiento es mayor al radio del circulo base...
+                (EPT: si el evento se ha producido fuera del circulo, hay que calcular la posicion del hat
+                para que esté dentro del circulo */
+            } else {
+                /*
+                Para esto hayaremos la proporción que hay entre el radio y el desplazamiento
+                Conociendo esta proporción  y la distancia total de un centro a una coordenada del dedo
+                Si multiplicamos ambos el resultado será una coordenada restringida entre el centro
+                de ese componente(X o Y) y la componente(X o Y) del circulo base.
+                Lo que estamos haciendo es hacer la coordenada proporcional a esa distancia.
 
-                    A continuacion calcula esa proporción.
-                    Y declara que cada componente, x e y: (recordemos  el orden de las operaciones)
-                    1. hace la operación del paréntesis, calcula la distancia entre el dedo y el centro del pad
-                    2. multiplica esta distancia por la proporción y obtiene  la distancia "restringida"
-                    3. suma esta distancia al centro del componente correspondiente.
+                A continuacion calcula esa proporción.
+                Y declara que cada componente, x e y: (recordemos  el orden de las operaciones)
+                1. hace la operación del paréntesis, calcula la distancia entre el dedo y el centro del pad
+                2. multiplica esta distancia por la proporción y obtiene  la distancia "restringida"
+                3. suma esta distancia al centro del componente correspondiente.
 
-                    Por ejemplo, teniendo:
-                     baseRadius = 10
-                     displacement = 28.2
-                     eX = 20
-                     centerX = 5
+                Por ejemplo, teniendo:
+                baseRadius = 10
+                displacement = 28.2
+                eX = 20
+                centerX = 5
 
-                     entonces:
-                     proportion = 10/28.2 =0.35
-                     x = 5 + (20-5) * 0.35
-                     x = 5 + (15) * 0.35
-                     x = 5 + 5.25
+                entonces:
+                proportion = 10/28.2 =0.35
+                x = 5 + (20-5) * 0.35
+                x = 5 + (15) * 0.35
+                x = 5 + 5.25
 
-                     si el centro está en la coordenada 5 y el dedo está en la coordenada 20
-                     quiere decir que la distancia entre ellos es de 15, pero y la distancia
-                     entre el centro y donde queremos restringir nuestro pad? (en el limite del pad base)
-                     pues multiplicamos esta distancia, 15 por esa proporción y nos da 5.25,
-                     sin embargo está no es su posición absoluta, sino relativa con respecto al centroX
-                     para obtener su absoluta la sumaremos al centroX
+                si el centro está en la coordenada 5 y el dedo está en la coordenada 20
+                quiere decir que la distancia entre ellos es de 15, pero y la distancia
+                entre el centro y donde queremos restringir nuestro pad? (en el limite del pad base)
+                pues multiplicamos esta distancia, 15 por esa proporción y nos da 5.25,
+                sin embargo está no es su posición absoluta, sino relativa con respecto al centroX
+                para obtener su absoluta la sumaremos al centroX*/
 
-                     */
-                    float proportion = baseRadius / displacement;
-                    x = centerX + (event.getX() - centerX) * proportion;
-                    y = centerY + (event.getY() - centerY) * proportion;
+                float proportion = baseRadius / displacement;
+                x = centerX + (event.getX() - centerX) * proportion;
+                y = centerY + (event.getY() - centerY) * proportion;
 
-                }
-                /*Ahora calculamos el porcentaje de desplazamiento en los dos componentes (x,y)
-                  suponiendo que el radio de la base es el 100%.
-                  Calculamos la diferencia entre el centro y la componente y dividimos para sacar el porcentaje
-                  por ejemplo, si el centroX es la coordenada 5, x es la coordenada 15 y la base mide 20
-                  (10-5)/20 = 0.5 <- el componente X del joystick se encuentra justo a la mitad.
-                  Realizaremos el calculo tanto para sacar el porcentaje de X como de Y.
-                */
-                float percentX = (x-centerX)/baseRadius;
-                float percentY = (centerY-y)/baseRadius;
-                //el calculo del porcentaje Y está invertido para que sea positivo hacia arriba
+            }
 
-                //si la dirección ha cambiado, lo notifica.
-                if(!direction.equals(checkDirection(percentX,percentY))){
-                    direction = checkDirection(percentX,percentY);
-                    callback.directionChanged(direction);
-                }
-                callback.onJoystickMoved(percentX,percentY,getId());
+            /*Ahora calculamos el porcentaje de desplazamiento en los dos componentes (x,y)
+            suponiendo que el radio de la base es el 100%.
+            Calculamos la diferencia entre el centro y la componente y dividimos para sacar el porcentaje
+            por ejemplo, si el centroX es la coordenada 5, x es la coordenada 15 y la base mide 20
+            (10-5)/20 = 0.5 <- el componente X del joystick se encuentra justo a la mitad.
+            Realizaremos el calculo tanto para sacar el porcentaje de X como de Y.*/
 
+            float percentX = (x - centerX) / baseRadius;
+            float percentY = (centerY - y) / baseRadius;
+            //el calculo del porcentaje Y está invertido para que sea positivo hacia arriba
+
+            //notifica los porcentages
+            callback.onJoystickMoved(percentX, percentY, joystickType);
         } else {
             x = centerX;
             y = centerY;
-            callback.onJoystickMoved(0,0,1);
-                if(!direction.equals(checkDirection(0,0))){
-                    direction = checkDirection(0,0);
-                    callback.directionChanged(direction);
-                }
+            callback.onJoystickMoved(0, 0, joystickType);
         }
+
+
         drawJoystick(x, y);
+
         return true;
     }
 
-    public String checkDirection(float percentX,float percentY) {   //los rangos de dirección
-        float var = 0.4f;   //variable de variación para el rango.
-        String dir = null;
-        if (percentX > var &&  percentY < var && percentY > -var) {
-            dir =  "right";
-        } else if (percentX > var && percentY > var) {
-            dir = "upright";
-        }else if(percentX > var && percentY < -var){
-            dir = "downright";
-        } else if (percentX < -var && percentY < var && percentY > -var) {
-            dir =  "left";
-        } else if (percentX < -var && percentY > var) {
-            dir =  "upleft";
-        }else if(percentX < -var && percentY < -var){
-            dir = "downleft";
-        }else if (percentX < var &&  percentX > -var && percentY > var){
-            dir = "up";
-        }else if (percentX < var &&  percentX > -var && percentY < -var){
-            dir = "down";
-        }else{
-            dir="idle";
-        }
-        return dir;
+    public void setJoystickType(JoystickType joystickType){
+        this.joystickType = joystickType;
     }
-
-
 
     //interfaz para notificar los movimientos
     public interface JoystickListener {
 
         //este método indicará los porcentajes X e Y además de la ID del joystick. (por si queremos más)
-        void onJoystickMoved(float xPercent, float yPercent, int source);
-        //este método simplemente indica la dirección
-        void directionChanged(String direction);
+        void onJoystickMoved(float xPercent, float yPercent, JoystickType source);
 
     }
 }

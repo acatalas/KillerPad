@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.killerpad.comunications.ConnectionResponse;
+
 import static android.content.Context.MODE_PRIVATE;
 
 import java.util.ArrayList;
@@ -126,8 +128,6 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         for (int button = 0; button < arrButtons.size(); button++) {
             arrButtons.get(button).setOnClickListener(this);
         }
-
-
     }
 
     private void acceptShip(){
@@ -322,17 +322,17 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
             // dialog de seleccion de naves.
 
             case R.id.lightShip:
-                saveConfig("ship", "light");
+                saveConfig("ship", ConnectionResponse.ShipType.TANK.name());
                 acceptShip();
                 break;
 
             case R.id.balancedShip:
-                saveConfig("ship", "balanced");
+                saveConfig("ship", ConnectionResponse.ShipType.NORMAL.name());
                 acceptShip();
                 break;
 
             case R.id.heavyShip:
-                saveConfig("ship", "heavy");
+                saveConfig("ship", ConnectionResponse.ShipType.STRONG.name());
                 acceptShip();
                 break;
 
