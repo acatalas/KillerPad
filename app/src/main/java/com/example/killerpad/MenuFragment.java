@@ -7,12 +7,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.killerpad.colorpicker.ColorPickerDialog;
+import com.example.killerpad.colorpicker.OnColorChangedListener;
+
 import static android.content.Context.MODE_PRIVATE;
 
 import java.util.ArrayList;
@@ -29,7 +34,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     private Button bColorPicker;
 
     //Dialogs
-    private Dialog colorDialog;
+    private ColorPickerDialog colorDialog;
     private Dialog configurationDialog;
 
 
@@ -197,9 +202,17 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         //Inicializa el atributo de clase colorDialog, le establece el layout
         // y llama a addColorListeners() para establecer los listeners a cada uno de sus botones.
 
-        this.colorDialog = new Dialog(this.getContext());
-        this.colorDialog.setContentView(R.layout.dialog_color_picker);
-        this.addColorListeners();
+        this.colorDialog = new ColorPickerDialog(getContext(),
+                new OnColorChangedListener() {
+                    @Override
+                    public void colorChanged(int color) {
+                        Log.d("COLOR", color + "");
+                    }
+                },
+                0);
+
+        //this.colorDialog.setContentView(R.layout.color_picker);
+        //this.addColorListeners();
 
         //muestra el dialogo
         this.colorDialog.show();
