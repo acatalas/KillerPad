@@ -165,7 +165,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         Fragment joystick_fragment_shooter = fm.findFragmentById(R.id.buttons_container);
         if (joystick_fragment_shooter == null) {
             joystick_fragment_shooter = new JoystickShooterFragment();
-            fm.beginTransaction().add(R.id.buttonsbloc_container, joystick_fragment_shooter).commit();
+            fm.beginTransaction().add(R.id.buttons_container, joystick_fragment_shooter).commit();
         }
 
         Fragment buttons_fragment = fm.findFragmentById(R.id.buttons_container);
