@@ -9,7 +9,11 @@ public class ConnectionResponse {
     private int originPort;
     private String color;
     private String userName;
-    private String shipType;
+    private ShipType shipType;
+
+    public enum ShipType {
+        MARAUDER, BATMOBILE, OCTANE
+    }
 
     public ConnectionResponse() {
 
@@ -34,7 +38,7 @@ public class ConnectionResponse {
         return userName;
     }
 
-    public String getShipType() {
+    public ShipType getShipType() {
         return shipType;
     }
 
@@ -44,7 +48,7 @@ public class ConnectionResponse {
         private int originPort;
         private String color;
         private String userName;
-        private String shipType;
+        private ShipType shipType;
 
         public Builder() {
         }
@@ -68,7 +72,7 @@ public class ConnectionResponse {
             return this;
         }
 
-        public Builder withShipType(final String shipType){
+        public Builder withShipType(final ShipType shipType){
             this.shipType = shipType;
             return this;
         }
