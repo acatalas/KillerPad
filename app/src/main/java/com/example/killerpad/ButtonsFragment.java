@@ -14,7 +14,8 @@ import com.example.killerpad.comunications.Message;
 public class ButtonsFragment extends Fragment implements View.OnClickListener {
 
     private Button bSend;
-    private Button bSuicide;
+    private Button bDash;
+    private Button bPowerUp;
     private PadActivity activity;
     private Handler handler;
 
@@ -31,14 +32,15 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
         //almacena el handler.
         this.handler = ((PadActivity) this.getActivity()).getHandler();
 
-        //Añade los Listeners a los botones de disparo y kill me
-//        this.bSend = v.findViewById(R.id.send);
-////        bSend.setOnClickListener(this);
+        //Añade los Listeners a los botones de disparo y dash y power up
+        this.bSend = v.findViewById(R.id.send);
+        bSend.setOnClickListener(this);
 
-//        this.bSuicide = v.findViewById(R.id.killMe);
+        this.bDash = v.findViewById(R.id.dash);
+        bDash.setOnClickListener(this);
 
-        // -- escuchador desactivado --
-        //bSuicide.setOnClickListener(this);
+        this.bPowerUp = v.findViewById(R.id.powerUp);
+        bPowerUp.setOnClickListener(this);
 
         this.activity = (PadActivity)getActivity();
 
@@ -50,15 +52,19 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
 
         int button = v.getId();
 
-        //botón KillMe (desactivado)
-//        if (button == R.id.killMe) {
-//            this.handler.sendKillerAction(Message.DEATH_COMMAND);
-//        }
-//        //botón de disparo
-//        } else if (button == R.id.send) {
-//            this.handler.sendKillerAction(Message.SHOOT_COMMAND);
-//
-//        }
+        //botón de dash
+        if (button == R.id.dash) {
+            this.handler.sendKillerAction(Message.DASH_COMMAND);
+        }
+        //botón de disparo
+         else if (button == R.id.send) {
+            this.handler.sendKillerAction(Message.SHOOT_COMMAND);
+
+        }
+        //botón de powerUp
+        else if (button == R.id.powerUp){
+            this.handler.sendKillerAction(Message.POWERUP_COMMAND);
+        }
 
     }
 }
