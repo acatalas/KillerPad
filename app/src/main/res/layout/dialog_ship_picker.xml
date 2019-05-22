@@ -4,50 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backgroundrepeat">
+    android:background="@color/colorWhitesemi">
 
-    <Button
-        android:id="@+id/lightShip"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="132dp"
-        android:layout_marginTop="129dp"
-        android:layout_marginBottom="132dp"
-        android:background="@drawable/rounded_shape_button"
-        app:backgroundTint="@color/colorBlue"
+    <ImageView
+        android:id="@+id/batmobile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:adjustViewBounds="false"
+        android:clickable="true"
+        android:cropToPadding="false"
+        app:layout_constraintBottom_toBottomOf="@+id/octane"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/octane"
+        app:layout_constraintTop_toTopOf="@+id/octane"
+        app:srcCompat="@drawable/batmobile" />
+
+    <ImageView
+        android:id="@+id/octane"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/marauder"
+        app:layout_constraintStart_toEndOf="@+id/marauder"
+        app:layout_constraintTop_toTopOf="@+id/marauder"
+        app:layout_constraintVertical_bias="0.482"
+        app:srcCompat="@drawable/octane" />
+
+    <ImageView
+        android:id="@+id/marauder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/balancedShip"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="89dp"
-        android:layout_marginTop="129dp"
-        android:layout_marginBottom="130dp"
-        android:background="@drawable/rounded_shape_button"
-        android:clickable="true"
-        app:backgroundTint="@color/colorWhite"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/lightShip"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/heavyShip"
-        android:layout_width="48dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="84dp"
-        android:layout_marginTop="129dp"
-        android:layout_marginEnd="139dp"
-        android:layout_marginBottom="130dp"
-        android:background="@drawable/rounded_shape_button"
-        app:backgroundTint="@color/colorAquaMarine"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/balancedShip"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/marauder" />
 
 </android.support.constraint.ConstraintLayout>

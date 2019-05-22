@@ -12,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+
+import com.example.killerpad.comunications.ConnectionResponse;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -26,10 +28,9 @@ import java.util.ArrayList;
 
 public class MenuFragment extends Fragment implements View.OnClickListener {
 
-    private Bundle sis;
-    private Button goToPad;
-    private Button bColorPicker;
-    private Button bShipPicker;
+    private Button btnStartGame;
+    private ImageButton bColorPicker;
+    private ImageButton bShipPicker;
 
     //Dialogs
     private Dialog colorDialog;
@@ -52,13 +53,13 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         // almacenamos en una variable las shared preferences
         // y recuperamos el textview y establecemos el valor recuperado de las topscores de sharedpreferences.
         SharedPreferences prefs = getContext().getSharedPreferences ( "savedPrefs", MODE_PRIVATE);
-        ((TextView) v.findViewById(R.id.tops)).setText(prefs.getString("topScore","0"));
+        //((TextView) v.findViewById(R.id.tops)).setText(prefs.getString("topScore","0"));
       
         // almacenamos el boton que inicia nueva partida y muestra el dialogo de configuración
-        this.goToPad = (Button) v.findViewById(R.id.go_to_pad);
+        btnStartGame = (Button) v.findViewById(R.id.go_to_pad);
 
         //añade listener en el botón.
-        this.goToPad.setOnClickListener(new View.OnClickListener() {
+        btnStartGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //muestra el dialog para introducir la configuracion
@@ -67,7 +68,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         });
 
         // almacenamos el boton para elegir el color de la nave
-        this.bColorPicker = (Button) v.findViewById(R.id.buttonInfo);
+        this.bColorPicker = v.findViewById(R.id.btnColorPicker);
 
         // añade el listener en el botón.
         this.bColorPicker.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +79,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         });
 
         // almacenamos el boton para elegir que nave queremos
-        this.bShipPicker = (Button) v.findViewById(R.id.buttonScores);
+        this.bShipPicker = v.findViewById(R.id.btnShipPicker);
 
         // añade el listener en el boton
         this.bShipPicker.setOnClickListener(new View.OnClickListener(){
@@ -91,23 +92,18 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         return v;
     }
 
-    //************** myMethods ****************
-
-    public void acceptColor(){
-        //almacena el surfaceview (ShipView) y utilizando su método para actualizar el color de la nave
-        // pasando por parámetro el color recuperado de shared preferences
+    //almacena el surfaceview (ShipView) y utilizando su método para actualizar el color de la nave
+    // pasando por parámetro el color recuperado de shared preferences
+    /*public void updateShipViewColor(){
         ShipView shipView = ((ShipView) ((MenuActivity)getActivity()).findViewById(R.id.shipView));
-        shipView.updateColor((String) getContext().getSharedPreferences("savedPrefs",Context.MODE_PRIVATE).getString("color","ffffff"));
-        //finalmente cancela el dialog.
-        this.colorDialog.cancel();
-    }
+        shipView.updateColor((String) getContext()
+                .getSharedPreferences("savedPrefs",Context.MODE_PRIVATE)
+                .getString("color","ffffff"));
+    }*/
 
+    // almacenamos en un arraylist todos los botones de color que se encuentran en el dialog del color picker
     private void addColorListeners() {
-
-        // almacenamos en un arraylist todos los botones de color que se encuentran en el dialog del color picker
-
         ArrayList<Button> arrButtons = new ArrayList<>();
-
 
         arrButtons.add((Button) this.colorDialog.findViewById(R.id.orangeButton));
         arrButtons.add((Button) this.colorDialog.findViewById(R.id.limaButton));
@@ -130,23 +126,38 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private void acceptShip(){
-        ShipView shipView = ((ShipView) ((MenuActivity)getActivity()).findViewById(R.id.shipView));
-        shipView.updateShip((String) getContext().getSharedPreferences("savedPrefs",Context.MODE_PRIVATE).getString("color", "balancedShip"));
-    }
     private void addShipListeners(){
 
         // Almacenamos en un ArrayList los diversos tipos de naves con las que podremos jugar
 
-        ArrayList<Button> arrShips = new ArrayList<>();
+        ImageView batmobileButton = shipDialog.findViewById(R.id.batmobile);
+        ImageView octaneButton = shipDialog.findViewById(R.id.octane);
+        ImageView marauderButton = shipDialog.findViewById(R.id.marauder);
 
-        arrShips.add((Button) this.shipDialog.findViewById(R.id.lightShip));
-        arrShips.add((Button) this.shipDialog.findViewById(R.id.balancedShip));
-        arrShips.add((Button) this.shipDialog.findViewById(R.id.heavyShip));
+        batmobileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveSharedPreferences("ship", ConnectionResponse.ShipType.BATMOBILE.name());
+                shipDialog.cancel();
+            }
+        });
 
-        for (int button = 0; button < arrShips.size(); button++) {
-            arrShips.get(button).setOnClickListener(this);
-        }
+        octaneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveSharedPreferences("ship", ConnectionResponse.ShipType.OCTANE.name());
+                shipDialog.cancel();
+            }
+        });
+
+        marauderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveSharedPreferences("ship", ConnectionResponse.ShipType.MARAUDER.name());
+                shipDialog.cancel();
+            }
+        });
+
     }
 
     public void connectPadActivity(View v){
@@ -176,9 +187,9 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         intent.putExtra("port", port);
 
         // guarda las configuraciones en las shared preferences
-        saveConfig("user", user);
-        saveConfig("ip", ip);
-        saveConfig("port", String.valueOf(port));
+        saveSharedPreferences("user", user);
+        saveSharedPreferences("ip", ip);
+        saveSharedPreferences("port", String.valueOf(port));
 
         // inicia la actividad del pad
         startActivity(intent);
@@ -187,11 +198,9 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         getActivity().finish();
     }
 
+    //invocado por showConfigDialog() para rellenar los campos (user,ip,puerto)
+    // con la última configuración (sharedpreferences).
     private void loadConfigurationDialog() {
-
-        //invocado por showConfigDialog() para rellenar los campos (user,ip,puerto)
-        // con la última configuración (sharedpreferences).
-
         FloatingActionButton bAceptar;
         FloatingActionButton bCancelar;
 
@@ -209,9 +218,9 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         etPort = this.configurationDialog.findViewById(R.id.puerto);
 
         // carga las configuraciones con las shared preferences
-        loadConfig("user", etUsername);
-        loadConfig("ip", etIp);
-        loadConfig("port", etPort);
+        loadSharedPreferences("user", etUsername);
+        loadSharedPreferences("ip", etIp);
+        loadSharedPreferences("port", etPort);
 
         //añade los listener para los botones aceptar y cancelar.
         bAceptar.setOnClickListener(this);
@@ -219,24 +228,15 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private void loadConfig(String key, EditText et) {
-        // pasado una clave y un editText, utilizando loadPreferences carga el valor de la clave
-        // y lo carga en el editText.
-        et.setText(((MenuActivity) getActivity()).loadPreferences(key));
-    }
-
+    //invocado por bColorPicker
+    //(ventana para elegir color.)
+    //Inicializa el atributo de clase colorDialog, le establece el layout
+    // y llama a addColorListeners() para establecer los listeners a cada uno de sus botones.
     private void showColorPickerDialog() {
-        //invocado por bColorPicker
-        //(ventana para elegir color.)
-        //Inicializa el atributo de clase colorDialog, le establece el layout
-        // y llama a addColorListeners() para establecer los listeners a cada uno de sus botones.
-
         this.colorDialog = new Dialog(this.getContext());
         this.colorDialog.setContentView(R.layout.dialog_color_picker);
         this.addColorListeners();
-
-        //muestra el dialogo
-        this.colorDialog.show();
+        this.colorDialog.show(); //muestra el dialogo
 
     }
 
@@ -247,11 +247,9 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         this.shipDialog.show();
     }
 
+    //invocado por goToPad button.
+    //(ventana para establecer la configuración de conexión y conectarse).
     private void showConfigDialog() {
-
-        //invocado por goToPad button.
-        //(ventana para establecer la configuración de conexión y conectarse).
-
         this.configurationDialog = new Dialog(this.getContext());
         this.configurationDialog.setContentView(R.layout.dialog_connect);
         this.loadConfigurationDialog();
@@ -259,12 +257,17 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private void saveConfig(String key, String value) {
-        // Pasado una clave y un valor, utilizando savePreferences() almacena
-        // el valor con la clave dada en SharedPreferences.
+    // Pasado una clave y un valor, utilizando savePreferences() almacena
+    // el valor con la clave dada en SharedPreferences.
+    private void saveSharedPreferences(String key, String value) {
         ((MenuActivity) getActivity()).savePreferences(key, value);
     }
 
+    // pasado una clave y un editText, utilizando loadPreferences carga el valor de la clave
+    // y lo carga en el editText.
+    private void loadSharedPreferences(String key, EditText et) {
+        et.setText(((MenuActivity) getActivity()).loadPreferences(key));
+    }
 
     @Override
     public void onClick(View v) {
@@ -275,69 +278,58 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
 
             // dialog de los botones de colores.
             case R.id.orangeButton:
-                saveConfig("color", "ff9800");
-                acceptColor();
+                saveSharedPreferences("color", "ff9800");
+                //updateShipViewColor();
+                colorDialog.dismiss();
                 break;
 
             case R.id.blueButton:
-                saveConfig("color", "257EFF");
-                acceptColor();
+                saveSharedPreferences("color", "257EFF");
+                //updateShipViewColor();
+                colorDialog.dismiss();
                 break;
 
             case R.id.limaButton:
-                saveConfig("color", "A7FF18");
-                acceptColor();
+                saveSharedPreferences("color", "A7FF18");
+                //updateShipViewColor();
+                colorDialog.dismiss();
                 break;
 
             case R.id.redButton:
-                saveConfig("color", "FF0000");
-                acceptColor();
+                saveSharedPreferences("color", "FF0000");
+                //updateShipViewColor();
+                colorDialog.dismiss();
                 break;
 
             case R.id.aquaMarineButton:
-                saveConfig("color", "11bfb9");
-                acceptColor();
+                saveSharedPreferences("color", "11bfb9");
+                //updateShipViewColor();
+                colorDialog.dismiss();
                 break;
 
             case R.id.fucsiaButton:
-                saveConfig("color", "f24694");
-                acceptColor();
+                saveSharedPreferences("color", "f24694");
+                //updateShipViewColor();
+                colorDialog.dismiss();
                 break;
 
             case R.id.whiteButton:
-                saveConfig("color", "ffffff");
-                acceptColor();
+                saveSharedPreferences("color", "ffffff");
+                //updateShipViewColor();
+                colorDialog.dismiss();
                 break;
 
             case R.id.yellowButton:
-                saveConfig("color", "F0EB3B");
-                acceptColor();
+                saveSharedPreferences("color", "F0EB3B");
+                //updateShipViewColor();
+                colorDialog.dismiss();
                 break;
 
             case R.id.purpleButton:
-                saveConfig("color", "6E28E0");
-                acceptColor();
+                saveSharedPreferences("color", "6E28E0");
+                //updateShipViewColor();
+                colorDialog.dismiss();
                 break;
-
-            // dialog de seleccion de naves.
-
-            case R.id.lightShip:
-                saveConfig("ship", "light");
-                acceptShip();
-                break;
-
-            case R.id.balancedShip:
-                saveConfig("ship", "balanced");
-                acceptShip();
-                break;
-
-            case R.id.heavyShip:
-                saveConfig("ship", "heavy");
-                acceptShip();
-                break;
-
-
-            // dialogo de configuración de conexión.
 
             //botón cancelar
             case R.id.fButtonCancelar:
