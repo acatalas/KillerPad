@@ -163,13 +163,6 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
                     .add(R.id.joystick_container, joystick_fragment).commit();
         }
 
-        Fragment joystick_fragment_shooter = fm.findFragmentById(R.id.buttons_container);
-        if (joystick_fragment_shooter == null) {
-            joystick_fragment_shooter = new JoystickShooterFragment();
-            fm.beginTransaction().add(R.id.buttons_container, joystick_fragment_shooter).commit();
-        }
-
-
         Fragment buttons_fragment = fm.findFragmentById(R.id.buttons_container);
         if (buttons_fragment == null) {
             buttons_fragment = new ButtonsFragment();
@@ -332,18 +325,17 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
 
     @Override
     public void onJoystickMoved(float xPercent, float yPercent, int source) {
-        Log.d("move","X: "+xPercent+" Y: "+yPercent);
-        //Método para futura implementación.
+        Log.d("MoveShip","X: "+xPercent+" Y: "+yPercent);
+        handler.sendKillerAction(Message.MOVEMENT_COMMAND, xPercent, yPercent);
     }
 
-    @Override
-    public void directionChanged(String direction) {
+    /*public void directionChanged(String direction) {
 
         //Método callback para ser notificado de los mensajes de dirección del joystick
         Log.d("move", direction);
         handler.sendKillerAction(Message.MOVEMENT_COMMAND, 1, 1);
         //handler.sendMessage(direction);
-    }
+    }*/
 
     @Override
     public void onClick(View v) {

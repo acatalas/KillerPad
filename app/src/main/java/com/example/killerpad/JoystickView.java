@@ -22,8 +22,6 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
     private float x; //coordenada X del pad
     private float y; //coordenada Y del pad
 
-    private String direction = "idle";
-
     private JoystickListener callback;
 
     //constructor básico, para instanciar en código
@@ -203,20 +201,20 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
                 //el calculo del porcentaje Y está invertido para que sea positivo hacia arriba
 
                 //si la dirección ha cambiado, lo notifica.
-                if(!direction.equals(checkDirection(percentX,percentY))){
+                /*if(!direction.equals(checkDirection(percentX,percentY))){
                     direction = checkDirection(percentX,percentY);
                     callback.directionChanged(direction);
-                }
+                }*/
                 callback.onJoystickMoved(percentX,percentY,getId());
 
         } else {
             x = centerX;
             y = centerY;
             callback.onJoystickMoved(0,0,1);
-                if(!direction.equals(checkDirection(0,0))){
+                /*if(!direction.equals(checkDirection(0,0))){
                     direction = checkDirection(0,0);
                     callback.directionChanged(direction);
-                }
+                }*/
         }
         drawJoystick(x, y);
         return true;
@@ -254,8 +252,6 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
 
         //este método indicará los porcentajes X e Y además de la ID del joystick. (por si queremos más)
         void onJoystickMoved(float xPercent, float yPercent, int source);
-        //este método simplemente indica la dirección
-        void directionChanged(String direction);
 
     }
 }

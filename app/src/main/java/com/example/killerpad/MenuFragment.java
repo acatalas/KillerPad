@@ -29,8 +29,9 @@ import java.util.ArrayList;
 public class MenuFragment extends Fragment implements View.OnClickListener {
 
     private Button btnStartGame;
-    private ImageButton bColorPicker;
-    private ImageButton bShipPicker;
+    private ImageButton btnColorPicker;
+    private ImageButton btnShipPicker;
+    private ImageButton btnSettings;
 
     //Dialogs
     private Dialog colorDialog;
@@ -54,24 +55,17 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         // y recuperamos el textview y establecemos el valor recuperado de las topscores de sharedpreferences.
         SharedPreferences prefs = getContext().getSharedPreferences ( "savedPrefs", MODE_PRIVATE);
         //((TextView) v.findViewById(R.id.tops)).setText(prefs.getString("topScore","0"));
-      
-        // almacenamos el boton que inicia nueva partida y muestra el dialogo de configuración
-        btnStartGame = (Button) v.findViewById(R.id.go_to_pad);
 
-        //añade listener en el botón.
+        btnStartGame = (Button) v.findViewById(R.id.go_to_pad);
         btnStartGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //muestra el dialog para introducir la configuracion
                 showConfigDialog();
             }
         });
 
-        // almacenamos el boton para elegir el color de la nave
-        this.bColorPicker = v.findViewById(R.id.btnColorPicker);
-
-        // añade el listener en el botón.
-        this.bColorPicker.setOnClickListener(new View.OnClickListener() {
+        btnColorPicker = v.findViewById(R.id.btnColorPicker);
+        btnColorPicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showColorPickerDialog();
@@ -79,13 +73,30 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         });
 
         // almacenamos el boton para elegir que nave queremos
-        this.bShipPicker = v.findViewById(R.id.btnShipPicker);
-
-        // añade el listener en el boton
-        this.bShipPicker.setOnClickListener(new View.OnClickListener(){
+        btnShipPicker = v.findViewById(R.id.btnShipPicker);
+        btnShipPicker.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 showShipPickerDialog();
+            }
+        });
+
+        btnSettings = v.findViewById(R.id.btnSettings);
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+
+            boolean visible = false;
+
+            @Override
+            public void onClick(View v) {
+                visible = !visible;
+                if(visible){
+                    btnShipPicker.setVisibility(View.VISIBLE);
+                    btnColorPicker.setVisibility(View.VISIBLE);
+                }else {
+                    btnShipPicker.setVisibility(View.INVISIBLE);
+                    btnColorPicker.setVisibility(View.INVISIBLE);
+                }
+
             }
         });
 
@@ -201,8 +212,8 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     //invocado por showConfigDialog() para rellenar los campos (user,ip,puerto)
     // con la última configuración (sharedpreferences).
     private void loadConfigurationDialog() {
-        FloatingActionButton bAceptar;
-        FloatingActionButton bCancelar;
+        ImageButton bAceptar;
+        ImageButton bCancelar;
 
         EditText etUsername;
         EditText etIp;
