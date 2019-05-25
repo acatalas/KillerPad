@@ -57,6 +57,7 @@ public class Handler implements Runnable {
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+            socket.setSoTimeout(3500);
         } catch (IOException e) {
             socket = null;
             e.printStackTrace();
@@ -80,6 +81,7 @@ public class Handler implements Runnable {
             try {
                 //Con el método listenServer escucha e interpreta los mensajes del servidor.
                 listenServer();
+                sendTimeoutMessage();
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -200,6 +202,10 @@ public class Handler implements Runnable {
         String json = Message.convertMessageToJson(message);
         Log.d("HANDLER_SEND", json);
         out.println(json);
+    }
+
+    private void sendTimeoutMessage() {
+        out.println(Message.STATUS_REQUEST);
     }
 
     private void sendDisconnectMessage(){

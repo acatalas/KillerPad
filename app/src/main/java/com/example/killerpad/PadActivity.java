@@ -26,7 +26,6 @@ import com.example.killerpad.comunications.Message;
 public class PadActivity extends AppCompatActivity implements JoystickView.JoystickListener,  View.OnClickListener {
 
     private Handler handler;
-    private static final String TAG = "hola";
     private int topScore;
     private int score;
 
@@ -39,8 +38,9 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("PADACTIVITY","on create");
+
         setContentView(R.layout.activity_pad);
-        Log.d(TAG,"on create");
 
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build());
@@ -78,6 +78,11 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         getSupportActionBar().hide();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     /* Crear un dialog informando de un error de conexión.
     Dispone de un botón para volver al menú.
     Utilizamos runOnUi para invocar al hilo que ha creado la jerarquía de vistas para evitar errores.
@@ -85,22 +90,27 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
     Por lo que el único hilo que puede realizar estas modificaciones es el de PadActivity.*/
     public void showAlertDialog (final int message) {
         runOnUiThread(new Runnable() {
+
             private TextView errorMessage;
+            private LayoutInflater inflater;
+            private View dialogView;
+            private ImageButton acceptButton;
 
             @Override
             public void run() {
                 //Crea el dialog
                 alertDialog = new Dialog(PadActivity.this);
-                LayoutInflater inflater = getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.dialog_alert, null);
+                inflater = getLayoutInflater();
+                dialogView = inflater.inflate(R.layout.dialog_alert, null);
                 alertDialog.setContentView(dialogView);
 
+                //Set error message
                 errorMessage = dialogView.findViewById(R.id.textErrorMessage);
                 errorMessage.setText(message);
 
                 //Recupera boton aceptar
-                ImageButton bot = dialogView.findViewById(R.id.botonAlertUser);
-                bot.setOnClickListener(PadActivity.this);
+                acceptButton = dialogView.findViewById(R.id.botonAlertUser);
+                acceptButton.setOnClickListener(PadActivity.this);
 
                 //Muestra el dialog
                 alertDialog.show();
@@ -174,6 +184,12 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
                     .add(R.id.buttons_container, buttons_fragment).commit();
         }
 
+    }
+
+    private void dismissAllDialogs(){
+        if(alertDialog != null && alertDialog.isShowing()){
+            alertDialog.dismiss();
+        }
     }
 
     public void cuentaAtras() {
