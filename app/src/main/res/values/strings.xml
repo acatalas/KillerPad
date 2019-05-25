@@ -14,4 +14,7 @@
     <string name="accept_connection">Accept connection</string>
     <string name="error_connexion">Error en la conexión.</string>
     <string name="error_game_started">No se puede conectar a una partida empezada.</string>
+    <string name="exit_game_confirmation">¿Seguro que quieres volver al menú?</string>
+    <string name="exit_info">Esta acción finalizará tu partida actual.</string>
+    <string name="connecting">Connecting...</string>
 </resources>

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class BoardFragment extends Fragment{
@@ -47,11 +48,11 @@ public class BoardFragment extends Fragment{
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_exit);
 
-        FloatingActionButton bAceptar = dialog.findViewById(R.id.byeB);
-        FloatingActionButton bCancelar = dialog.findViewById(R.id.cancelByeB);
+        ImageButton btnAceptar = dialog.findViewById(R.id.btn_accept);
+        ImageButton btnCancelar = dialog.findViewById(R.id.btn_cancel);
 
         //evento al pular boton aceptar: configurar ursName, ip, puerto
-        bAceptar.setOnClickListener(new View.OnClickListener(){
+        btnAceptar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 dialog.cancel();
@@ -61,7 +62,7 @@ public class BoardFragment extends Fragment{
         });
 
         //evento al pular boton aceptar: configurar ursName, ip, puerto
-        bCancelar.setOnClickListener(new View.OnClickListener(){
+        btnCancelar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 dialog.cancel();

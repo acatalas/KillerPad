@@ -220,8 +220,8 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         EditText etPort;
 
         // recueramos los botones del dialog de configuración
-        bAceptar = this.configurationDialog.findViewById(R.id.fButtonAceptar);
-        bCancelar = this.configurationDialog.findViewById(R.id.fButtonCancelar);
+        bAceptar = this.configurationDialog.findViewById(R.id.btn_accept);
+        bCancelar = this.configurationDialog.findViewById(R.id.btn_cancel);
 
         // editText de cada campo.
         etUsername = this.configurationDialog.findViewById(R.id.username);
@@ -344,12 +344,12 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                 break;
 
             //botón cancelar
-            case R.id.fButtonCancelar:
+            case R.id.btn_cancel:
                 this.configurationDialog.cancel();
                 break;
 
             //botón aceptar
-            case R.id.fButtonAceptar:
+            case R.id.btn_accept:
                 this.connectPadActivity(v);
                 break;
 

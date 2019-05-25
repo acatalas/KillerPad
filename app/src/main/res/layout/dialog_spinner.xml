@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backgroundrepeat"
+    android:background="@color/whiteSemi"
     android:minWidth="300sp">
 
     <ProgressBar
@@ -21,21 +21,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></ProgressBar>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/spcancel"
-        android:layout_width="67dp"
-        android:layout_height="wrap_content"
+    <ImageButton
+        android:id="@+id/btn_cancel"
+        android:layout_width="@dimen/round_button_size"
+        android:layout_height="@dimen/round_button_size"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/round_button_grey"
         android:clickable="true"
         android:paddingBottom="4dp"
-        app:backgroundTint="@color/whiteSemi"
+        android:src="@drawable/ic_delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_delete" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/connecting_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -43,10 +43,10 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
         android:text="Connecting..."
-        android:textColor="@color/white"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spcancel"
+        app:layout_constraintBottom_toTopOf="@+id/btn_cancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner" />

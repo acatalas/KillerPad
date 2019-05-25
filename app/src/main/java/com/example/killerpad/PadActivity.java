@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -81,6 +80,8 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        dismissAllDialogs();
+
     }
 
     /* Crear un dialog informando de un error de conexión.
@@ -90,7 +91,6 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
     Por lo que el único hilo que puede realizar estas modificaciones es el de PadActivity.*/
     public void showAlertDialog (final int message) {
         runOnUiThread(new Runnable() {
-
             private TextView errorMessage;
             private LayoutInflater inflater;
             private View dialogView;
@@ -100,7 +100,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
             public void run() {
                 //Crea el dialog
                 alertDialog = new Dialog(PadActivity.this);
-                inflater = getLayoutInflater();
+                inflater = PadActivity.this.getLayoutInflater();
                 dialogView = inflater.inflate(R.layout.dialog_alert, null);
                 alertDialog.setContentView(dialogView);
 
@@ -109,11 +109,11 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
                 errorMessage.setText(message);
 
                 //Recupera boton aceptar
-                acceptButton = dialogView.findViewById(R.id.botonAlertUser);
+                acceptButton = dialogView.findViewById(R.id.btn_accept);
                 acceptButton.setOnClickListener(PadActivity.this);
 
                 //Muestra el dialog
-                alertDialog.show();
+                if (!isFinishing()) { alertDialog.show(); }
             }
         });
 
@@ -131,8 +131,8 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         exitConfirmation.show();
 
         //Recuperamos los botones de aceptar y cancelar para asignarles su correspondiente listener.
-        FloatingActionButton bAcep = exitConfirmation.findViewById(R.id.byeB);
-        FloatingActionButton bCancel = exitConfirmation.findViewById(R.id.cancelByeB);
+        FloatingActionButton bAcep = exitConfirmation.findViewById(R.id.btn_accept);
+        FloatingActionButton bCancel = exitConfirmation.findViewById(R.id.btn_cancel);
 
         //botón aceptar
         bAcep.setOnClickListener(this);
@@ -150,7 +150,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         spinner.setCancelable(false);
 
         //Recupera el botón cancelar del dialog y le asigna el listener.
-        FloatingActionButton cancel = spinner.findViewById(R.id.spcancel);
+        ImageButton cancel = spinner.findViewById(R.id.btn_cancel);
         cancel.setOnClickListener(this);
 
         //muestra el dialog
@@ -187,7 +187,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
     }
 
     private void dismissAllDialogs(){
-        if(alertDialog != null && alertDialog.isShowing()){
+        if(alertDialog != null){
             alertDialog.dismiss();
         }
     }
@@ -361,13 +361,13 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
     public void onClick(View v) {
 
         int clickedButtonID = v.getId();
-            if (clickedButtonID==R.id.botonAlertUser) {
+            if (clickedButtonID==R.id.btn_accept) {
                 goToMenu();
                 finish();
 
-            } else if (clickedButtonID == R.id.byeB) {
+            } else if (clickedButtonID == R.id.btn_accept) {
 
-            } else if (clickedButtonID == R.id.cancelByeB) {
+            } else if (clickedButtonID == R.id.btn_cancel) {
                 exitConfirmation.hide();
 
             } else if (clickedButtonID == R.id.botonCancelRestart) {
@@ -377,7 +377,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
                 resetBoard();
                 restart.hide();
 
-            }else if(clickedButtonID == R.id.spcancel){
+            }else if(clickedButtonID == R.id.btn_cancel){
                 disconnect();
             }
     }

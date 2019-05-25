@@ -48,7 +48,7 @@ public class Handler implements Runnable {
                 socket = new Socket(this.recieverIp, this.port);
                 Thread.sleep(200);
             } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
+                Log.d("HANDLER_SET_CONNECTION", e.toString());
             }
         }
 
@@ -60,7 +60,7 @@ public class Handler implements Runnable {
             socket.setSoTimeout(3500);
         } catch (IOException e) {
             socket = null;
-            e.printStackTrace();
+            Log.d("HANDLER_SET_TIMEOUT", e.toString());
         }
 
         connected = true;
@@ -84,7 +84,6 @@ public class Handler implements Runnable {
                 sendTimeoutMessage();
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
                 Log.d("HANDLER_ERROR_ALIVE", e.toString());
             }
         }
@@ -140,25 +139,30 @@ public class Handler implements Runnable {
             //Si salta excepción se notifica al user.
             Log.d("HANDLER_ERROR_READ", e.getMessage());
             this.padActivity.showAlertDialog(R.string.error_connexion);//OK
-            alive = false;
+            disconnect();
         }
     }
 
     //Implementa el protocolo de aplicación, discrimina los mensajes y gestiona el comando.
     private void processGameMessage(String data) {
+        //Ignore status requests
+        if(data.equalsIgnoreCase(Message.STATUS_REQUEST)){
+            return;
+        }
+
+        Log.d("HANDLER_RECIEVE", data);
+
         Message message = Message.readMessage(data);
 
-        Log.d("HANDLER_RECIEVE", message.getCommand());
-
         switch (message.getCommand()) {
-
             case Message.PAD_CONNECTED:
                 padActivity.getSpinner().cancel(); //Cuando se establezca conexión el dialog del Spinner se oculta.
                 break;
 
             case Message.PAD_NOT_CONNECTED:
+                padActivity.getSpinner().dismiss();
                 padActivity.showAlertDialog(R.string.error_game_started);
-                //TODO: pad not connected
+                disconnect();
 
             case Message.DAMAGE_COMMAND: // cuando la nave recibe daño
                 padActivity.vibrar(300);
