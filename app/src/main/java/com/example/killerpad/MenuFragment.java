@@ -263,6 +263,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     private void showConfigDialog() {
         this.configurationDialog = new Dialog(this.getContext());
         this.configurationDialog.setContentView(R.layout.dialog_connect);
+
         this.loadConfigurationDialog();
         this.configurationDialog.show();
 

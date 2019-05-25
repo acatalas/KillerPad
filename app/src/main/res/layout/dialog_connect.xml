@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhitesemi"
+    android:background="@color/whiteSemi"
     android:minWidth="300dp"
     android:minHeight="200dp">
 
@@ -15,8 +15,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/rounded_edit_text"
+        android:background="@drawable/round_button_grey"
         android:clickable="true"
+        android:contentDescription="@string/accept_connection"
+        android:focusable="true"
         android:paddingBottom="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,8 +33,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/rounded_edit_text"
+        android:background="@drawable/round_button_grey"
         android:clickable="true"
+        android:contentDescription="@string/cancel"
+        android:focusable="true"
         android:paddingBottom="4dp"
         android:src="@android:drawable/ic_delete"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -46,16 +50,19 @@
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:autofillHints="@string/usuario"
         android:background="@drawable/rounded_edit_text"
         android:hint="@string/usuario"
+        android:imeOptions="actionNext"
+        android:inputType="text"
         android:paddingLeft="12dp"
-        android:shadowColor="@android:color/darker_gray"
+        android:paddingRight="12dp"
+        android:shadowColor="@color/lightGrey"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toTopOf="@+id/ip"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/ip"
@@ -63,15 +70,18 @@
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:autofillHints="@string/ip"
         android:background="@drawable/rounded_edit_text"
         android:digits="0123456789."
         android:hint="@string/ip"
+        android:imeOptions="actionNext"
+        android:inputType="number"
         android:paddingLeft="12dp"
-        android:shadowColor="@android:color/darker_gray"
+        android:paddingRight="12dp"
+        android:shadowColor="@color/lightGrey"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toTopOf="@+id/puerto"
-        app:layout_constraintTop_toBottomOf="@+id/username"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <EditText
         android:id="@+id/puerto"
@@ -79,16 +89,18 @@
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="32dp"
+        android:autofillHints="@string/puerto"
         android:background="@drawable/rounded_edit_text"
         android:fontFamily="sans-serif"
         android:hint="@string/puerto"
+        android:imeOptions="actionDone"
         android:inputType="number"
         android:paddingLeft="12dp"
-        android:shadowColor="@android:color/darker_gray"
+        android:paddingRight="12dp"
+        android:shadowColor="@color/lightGrey"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toTopOf="@+id/guideline11"
-        app:layout_constraintTop_toBottomOf="@+id/ip"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintTop_toBottomOf="@+id/ip" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline10"

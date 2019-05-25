@@ -1,7 +1,6 @@
 package com.example.killerpad;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 
@@ -15,7 +14,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.killerpad.comunications.Handler;
@@ -29,7 +31,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
     private int score;
 
     private Dialog spinner;
-    private Dialog alert;
+    private Dialog alertDialog;
     private Dialog exitConfirmation;
     private Dialog restart;
 
@@ -76,30 +78,32 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         getSupportActionBar().hide();
     }
 
-    public void alertUser () {
-
-        // Crear un dialog informando de un error de conexión.
-        // Dispone de un botón para volver al menú.
-
-        //Utilizamos runOnUi para invocar al hilo que ha creado la jerarquía de vistas para evitar errores.
-        // Ya que como vamos a modificar vistas que forman parte de la jerarquía de vistas creada por PadActivity
-        // Por lo que el único hilo que puede realizar estas modificaciones es el de PadActivity.
-
+    /* Crear un dialog informando de un error de conexión.
+    Dispone de un botón para volver al menú.
+    Utilizamos runOnUi para invocar al hilo que ha creado la jerarquía de vistas para evitar errores.
+    Ya que como vamos a modificar vistas que forman parte de la jerarquía de vistas creada por PadActivity
+    Por lo que el único hilo que puede realizar estas modificaciones es el de PadActivity.*/
+    public void showAlertDialog (final int message) {
         runOnUiThread(new Runnable() {
+            private TextView errorMessage;
+
             @Override
             public void run() {
+                //Crea el dialog
+                alertDialog = new Dialog(PadActivity.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.dialog_alert, null);
+                alertDialog.setContentView(dialogView);
 
-                //Si el handler está conectado lo desconectamos.
-                if(handler.connected) {
-                    handler.disconnect();
-                }
-                //Crea el dialog y recupera su botón de aceptar y le asigna el button listener.
-                alert = new Dialog(PadActivity.this);
-                alert.setContentView(R.layout.dialog_alertuser);
-                FloatingActionButton bot = alert.findViewById(R.id.botonAlertUser);
+                errorMessage = dialogView.findViewById(R.id.textErrorMessage);
+                errorMessage.setText(message);
+
+                //Recupera boton aceptar
+                ImageButton bot = dialogView.findViewById(R.id.botonAlertUser);
                 bot.setOnClickListener(PadActivity.this);
+
                 //Muestra el dialog
-                alert.show();
+                alertDialog.show();
             }
         });
 
@@ -247,23 +251,19 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         text.setText("0");
     }
 
-    public void sayBye(){
-
-        //Método para cortar la conexión y volver al menú.
-
-        if(handler.connected) {
-            this.handler.disconnect();
+    //Método para cortar la conexión y volver al menú.
+    public void disconnect(){
+        if(handler.isConnected()) {
+            handler.disconnect();
         }
 
-
+        //Go to menu
         startActivity(new Intent(this, MenuActivity.class));
         finish();
     }
 
+    //Método llamado por updateScores para almacenar la puntuación si hay record.
     public void setTopScore(String key, int value){
-        //Método llamado por updateScores para almacenar la puntuación si hay record.
-
-        // guarda el topScore en las shared preferences
         this.topScore = value;
 
         // Guarda el topScore
@@ -323,6 +323,10 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         return spinner;
     }
 
+    private void goToMenu(){
+        startActivity(new Intent(this, MenuActivity.class));
+    }
+
     @Override
     public void onJoystickMoved(float xPercent, float yPercent, int source) {
         Log.d("MoveShip","X: "+xPercent+" Y: "+yPercent);
@@ -342,20 +346,23 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
 
         int clickedButtonID = v.getId();
             if (clickedButtonID==R.id.botonAlertUser) {
-                startActivity(new Intent(this, MenuActivity.class));
+                goToMenu();
                 finish();
+
             } else if (clickedButtonID == R.id.byeB) {
-                sayBye();
+
             } else if (clickedButtonID == R.id.cancelByeB) {
                 exitConfirmation.hide();
+
             } else if (clickedButtonID == R.id.botonCancelRestart) {
-                sayBye();
+                disconnect();
+
             } else if (clickedButtonID == R.id.botonRestart) {
-                //handler.sendMessage("replay");
                 resetBoard();
                 restart.hide();
+
             }else if(clickedButtonID == R.id.spcancel){
-                sayBye();
+                disconnect();
             }
     }
 }
