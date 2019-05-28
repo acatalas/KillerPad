@@ -187,9 +187,8 @@ public class Handler implements Runnable {
         // Cargar el color de la nave de shared preferences
         // >> Hex color value
         SharedPreferences prefs = this.padActivity.getSharedPreferences("savedPrefs", MODE_PRIVATE);
-        String color = prefs.getString("color", "ffffff");
+        String color = prefs.getString("color", "#FF0000");
         String shipType = prefs.getString("ship", ConnectionResponse.ShipType.OCTANE.name());
-        color = "#" + color;
 
         //Envia un mensaje utilizando el protocolo de la aplicación para crear un mando nuevo
         // mandando como parámetros el usuario, el color y la ip destino y origen
