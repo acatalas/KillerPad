@@ -170,6 +170,12 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
                     .add(R.id.buttons_container, buttons_fragment).commit();
         }
 
+        Fragment boost_fragment = fm.findFragmentById(R.id.boost_container);
+        if (boost_fragment == null){
+            boost_fragment = new BoostFragment();
+            fm.beginTransaction().add(R.id.boost_container, boost_fragment).commit();
+        }
+
     }
 
     public void cuentaAtras() {

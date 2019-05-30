@@ -9,8 +9,8 @@
         android:id="@+id/send"
         android:layout_width="92dp"
         android:layout_height="92dp"
-        android:layout_marginEnd="68dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/rounded_color_picker"
         android:text="SHOOT!!!"
         android:textColor="@color/colorWhite"
@@ -22,26 +22,25 @@
         android:id="@+id/dash"
         android:layout_width="73dp"
         android:layout_height="73dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginBottom="28dp"
+        android:layout_marginEnd="68dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/rounded_color_picker"
         android:text="DASH"
         android:textColor="@color/colorWhite"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/send"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/send" />
 
     <Button
         android:id="@+id/powerUp"
         android:layout_width="73dp"
         android:layout_height="73dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="96dp"
+        android:layout_marginStart="72dp"
         android:background="@drawable/rounded_color_picker"
         android:text="POWERUP"
         android:textColor="@color/colorWhite"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/send"
+        app:layout_constraintStart_toStartOf="@+id/dash" />
 
 </android.support.constraint.ConstraintLayout>
