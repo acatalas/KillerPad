@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/whiteSemi">
+    android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/userTV"
-        android:layout_width="711dp"
-        android:layout_height="386dp"
+        android:id="@+id/boost_bar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="53dp"
         android:background="@color/colorRed"
         android:textColor="@color/colorAccent"
         android:textSize="18sp"
@@ -19,20 +19,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/scoreTV"
-        android:layout_width="476dp"
-        android:layout_height="159dp"
-        android:layout_marginTop="69dp"
-        android:layout_marginBottom="204dp"
+    <Button
+        android:id="@+id/boost_btn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@color/colorPrimaryDark"
-        android:text="SCORE: 0"
+        android:text="BOOST"
         android:textColor="@color/colorWhite"
-        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.236" />
+        app:layout_constraintTop_toBottomOf="@+id/boost_bar" />
 
 </android.support.constraint.ConstraintLayout>

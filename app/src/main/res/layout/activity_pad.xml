@@ -9,37 +9,44 @@
 
     <FrameLayout
         android:id="@+id/board_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-
-        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        android:layout_width="358dp"
+        android:layout_height="156dp"
+        android:layout_marginStart="62dp"
+        android:layout_marginEnd="62dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/joystick_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="224dp"
+        android:layout_height="205dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3">
+        app:layout_constraintStart_toStartOf="parent">
 
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/buttons_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="369dp"
+        android:layout_height="203dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="@+id/guideline3">
+        app:layout_constraintStart_toEndOf="@+id/joystick_container">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/boost_container"
+        android:layout_width="69dp"
+        android:layout_height="175dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.395"
+        app:layout_constraintStart_toEndOf="@+id/board_container"
+        app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
 
@@ -55,9 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintGuide_percent="0.50121653"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
