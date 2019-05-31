@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.killerpad.comunications.Handler;
 import com.example.killerpad.comunications.Message;
+import com.example.killerpad.sound.SoundManager;
 
 public class PadActivity extends AppCompatActivity implements JoystickView.JoystickListener {
 
@@ -32,7 +33,6 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
     private Dialog alertDialog;
     private Dialog exitConfirmation;
     private Dialog restart;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +66,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
 
         // Crear el handler para establecer la conexión y arranca su hilo
         this.handler = new Handler(this, user, ip, port);
+
         new Thread(this.handler).start();
 
     }
@@ -189,6 +190,15 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         if(alertDialog != null){
             alertDialog.dismiss();
         }
+        if(exitConfirmation != null){
+            exitConfirmation.dismiss();
+        }
+        if(spinner != null){
+            spinner.dismiss();
+        }
+        if(restart != null){
+            restart.dismiss();
+        }
     }
 
     public void cuentaAtras() {
@@ -285,10 +295,9 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         sp.commit();
     }
 
+    //Recuperamos el boardfragment para poder acceder a su método getScoreTV para obtener la puntuación actual
+    // y la parseamos a int.
     public void updateScores(final int points) {
-
-        //Recuperamos el boardfragment para poder acceder a su método getScoreTV para obtener la puntuación actual
-        // y la parseamos a int.
         FragmentManager fm = getSupportFragmentManager();
         BoardFragment bf = (BoardFragment) fm.findFragmentById(R.id.board_container);
 
@@ -320,9 +329,9 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         }
     }
 
+    //Método para vibrar la durante el periodo de tiempo en milisegundos pasado por parámetro.
+    // (Requiere permisos para vibrar en manifest)
     public void vibrar(int duration) {
-        //Método para vibrar la durante el periodo de tiempo en milisegundos pasado por parámetro.
-        // (Requiere permisos para vibrar en manifest)
         Vibrator vib = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
         vib.vibrate(duration);
     }
@@ -341,17 +350,8 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
 
     @Override
     public void onJoystickMoved(float xPercent, float yPercent, int source) {
-        Log.d("MoveShip","X: "+xPercent+" Y: "+yPercent);
         handler.sendKillerAction(Message.MOVEMENT_COMMAND, xPercent, yPercent);
     }
-
-    /*public void directionChanged(String direction) {
-
-        //Método callback para ser notificado de los mensajes de dirección del joystick
-        Log.d("move", direction);
-        handler.sendKillerAction(Message.MOVEMENT_COMMAND, 1, 1);
-        //handler.sendMessage(direction);
-    }*/
 
     private class GoToMenuListener implements View.OnClickListener{
 

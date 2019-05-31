@@ -19,8 +19,8 @@ public class ColorPickerDialog extends Dialog {
     private int initialColor;
 
     private static class ColorPickerView extends View {
-        private final int CENTER_X = dpToPx(132);
-        private final int CENTER_Y = dpToPx(132);
+        private final int CENTER_X = dpToPx(126);
+        private final int CENTER_Y = dpToPx(126);
         private final int CENTER_RADIUS = dpToPx(40);
         private final int MARGIN = dpToPx(8);
         private final float PI = 3.1415926f;

@@ -18,7 +18,7 @@ public class SoundManager {
 
     private static SoundManager soundManager;
 
-    private SoundManager(){
+    private SoundManager(Context context){
         soundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
         SHOOT_SOUND = soundPool.load(context, R.raw.shot, 1);
         BOOST_SOUND = soundPool.load(context, R.raw.boost, 1);
@@ -34,7 +34,7 @@ public class SoundManager {
 
     public static SoundManager getInstance(Context context){
         if (soundManager == null){ //if there is no instance available... create new one
-            soundManager = new SoundManager();
+            soundManager = new SoundManager(context);
         }
         return soundManager;
     }

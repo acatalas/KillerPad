@@ -36,7 +36,7 @@ public class ShipView extends SurfaceView implements SurfaceHolder.Callback, Vie
         //cargamos de las sharedpreferences el color en hexadecimal y lo guardamos en el atributo "sColor"
         //su valor por defecto es "fffff" (color blanco)
         SharedPreferences pref = getContext().getSharedPreferences("savedPrefs", Context.MODE_PRIVATE);
-        this.sColor = pref.getString("color", "ffffff");
+        this.sColor = pref.getString("color", "#FF0000");
         this.sShip = pref.getString("ship", "balancedShip");
 
 
