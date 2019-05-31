@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -11,7 +12,7 @@ import android.widget.Button;
 import com.example.killerpad.comunications.Handler;
 import com.example.killerpad.comunications.Message;
 
-public class BoostFragment extends Fragment implements View.OnClickListener {
+public class BoostFragment extends Fragment implements View.OnTouchListener {
 
     private Button bBoost;
     private PadActivity activity;
@@ -32,15 +33,15 @@ public class BoostFragment extends Fragment implements View.OnClickListener {
 
         //Añade los Listeners al botón de boost
         this.bBoost = v.findViewById(R.id.boost_btn);
-        bBoost.setOnClickListener(this);
+        bBoost.setOnTouchListener(this);
 
         this.activity = (PadActivity)getActivity();
 
         return v;
     }
 
-    @Override
-    public void onClick(View v) {
+    /*@Override
+    public void onTouch(View v) {
 
         int button = v.getId();
 
@@ -49,5 +50,20 @@ public class BoostFragment extends Fragment implements View.OnClickListener {
             this.handler.sendKillerAction(Message.TURBO_START_COMMAND);
         }
         this.handler.sendKillerAction(Message.TURBO_END_COMMAND);
+    }*/
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        int button = v.getId();
+
+        if(event.getAction() == MotionEvent.ACTION_BUTTON_PRESS && button == R.id.boost_btn){
+            this.handler.sendKillerAction(Message.TURBO_START_COMMAND);
+            return true;
+        }
+        else if (event.getAction() == MotionEvent.ACTION_BUTTON_RELEASE){
+            this.handler.sendKillerAction(Message.TURBO_END_COMMAND);
+        }
+        return false;
     }
 }
