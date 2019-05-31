@@ -14,12 +14,12 @@ public class Message {
     public static final String ACTION_COMMAND = "action";
     public static final String STATUS_REQUEST = "ok";
     public static final String DAMAGE_COMMAND = "pad_damage";
-    public static final String DEATH_COMMAND = "pad_death";
+    public static final String DEATH_COMMAND = "pad_dead";
     public static final String KILL_COMMAND = "pad_kill";
     public static final String MOVEMENT_COMMAND = "pad_move";
     public static final String SHOOT_COMMAND = "pad_shoot";
     public static final String DASH_COMMAND = "pad_dash";
-    public static final String POWERUP_COMMAND = "pad_powerup";
+    public static final String HEALTH_POWERUP_COMMAND = "pad_health";
     public static final String TURBO_START_COMMAND = "pad_turbo_start";
     public static final String TURBO_END_COMMAND = "pad_turbo_end";
     public static final String DISCONNECTION_COMMAND = "bye";

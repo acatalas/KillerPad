@@ -13,6 +13,7 @@ public class SoundManager {
     private final int DASH_SOUND;
 
     private int turboStream;
+    private boolean mpIsReleased = false;
 
     private Context context;
     private SoundPool soundPool;
@@ -64,10 +65,14 @@ public class SoundManager {
     public void dispose(){
         soundPool.release();
 
-        if(mediaPlayer.isPlaying()){
-            mediaPlayer.stop();
+        if(mediaPlayer != null && !mpIsReleased){
+            if(mediaPlayer.isPlaying()){
+                mediaPlayer.stop();
+            }
+
+            mediaPlayer.release();
+            mpIsReleased = true;
         }
-        mediaPlayer.release();
 
         soundManager = null;
     }

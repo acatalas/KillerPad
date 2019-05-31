@@ -207,7 +207,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         }
     }
 
-    public void cuentaAtras() {
+    /*public void cuentaAtras() {
 
         //Método para ir actualizando la cuenta atrás del dialog Restart.
         //Cuando la cuenta atrás acaba habilita el botón Reaparecer.
@@ -238,13 +238,13 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
             }
         });
 
-    }
+    }*/
 
     //Método que crea un dialog para mostrar una cuenta atrás cuando el jugador muere.
     //El usuario cuenta con dos botones: Reaparecer y Salir.
     // Cuando se crea el dialog el botón Reaparecer está deshabilitado.
     // El botón Salir vuelve al menú.
-    public void mayBeYouWantRestart(){
+    /*public void mayBeYouWantRestart(){
 
         //Utilizamos runOnUi para invocar al hilo que ha creado la jerarquía de vistas para evitar errores.
         // Ya que como vamos a modificar vistas que forman parte de la jerarquía de vistas creada por PadActivity
@@ -268,7 +268,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
             }
         });
 
-    }
+    }*/
 
     //Método llamado por el botón "Reparecer" del Dialog "Restart" para poner el
     // marcador de puntos a 0 otra vez (Cada vez que el usuario muere y reaparece).
@@ -309,7 +309,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
 
         final TextView text = bf.getScoreTV();
 
-        final int score = Integer.parseInt(text.getText().toString());
+        final int score = Integer.parseInt(text.getText().toString().split(" ")[1]);
 
         //Utilizamos runOnUi para invocar al hilo que ha creado la jerarquía de vistas para evitar errores.
         // Ya que como vamos a modificar vistas que forman parte de la jerarquía de vistas creada por PadActivity
@@ -350,7 +350,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         return spinner;
     }
 
-    private void goToMenu(){
+    public void goToMenu(){
         startActivity(new Intent(this, MenuActivity.class));
     }
 

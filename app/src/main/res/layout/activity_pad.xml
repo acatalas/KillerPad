@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backgroundrepeat"
-    tools:context=".PadActivity">
+    tools:context=".PadActivity"
+    android:keepScreenOn="true">
 
     <FrameLayout
         android:id="@+id/board_container"

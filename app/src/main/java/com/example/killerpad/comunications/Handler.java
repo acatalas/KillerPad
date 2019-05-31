@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import com.example.killerpad.PadActivity;
 import com.example.killerpad.R;
+import com.example.killerpad.sound.SoundManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -92,7 +93,7 @@ public class Handler implements Runnable {
 
     //Método que se invoca cuando se recibe el mensaje "ded" para indicar la muerte del usuario.
     //Irá actualizando la cuenta atrás de 10  a 0 a cada segundo pasado utilizando el método cuentaAtras.
-    private void cuentaAtras() {
+    /*private void cuentaAtras() {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -107,7 +108,7 @@ public class Handler implements Runnable {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     // Método para cerrar la conexión entre servidor y cliente. Envia un mensaje avisando al servidor
     public void disconnect() {
@@ -135,8 +136,10 @@ public class Handler implements Runnable {
             if (data != null) {
                 processGameMessage(data);
             }
-        } catch (IOException e) {
+
             //Si salta excepción se notifica al user.
+        } catch (IOException e) {
+
             Log.d("HANDLER_ERROR_READ", e.getMessage());
             this.padActivity.showAlertDialog(R.string.error_connexion);//OK
             disconnect();
@@ -150,13 +153,13 @@ public class Handler implements Runnable {
             return;
         }
 
-        Log.d("HANDLER_RECIEVE", data);
+        Log.d("HANDLER_RECEIVE", data);
 
         Message message = Message.readMessage(data);
 
         switch (message.getCommand()) {
             case Message.PAD_CONNECTED:
-                padActivity.getSpinner().cancel(); //Cuando se establezca conexión el dialog del Spinner se oculta.
+                padActivity.getSpinner().dismiss(); //Cuando se establezca conexión el dialog del Spinner se oculta.
                 break;
 
             case Message.PAD_NOT_CONNECTED:
@@ -166,7 +169,7 @@ public class Handler implements Runnable {
 
             case Message.DAMAGE_COMMAND: // cuando la nave recibe daño
                 padActivity.vibrar(300);
-                //TODO: setDamage(message.getDamage())
+                //padActivity.setDamage(message.getDamage())
                 break;
 
             case Message.KILL_COMMAND: // cuando la nave mata, suma puntos
@@ -176,9 +179,11 @@ public class Handler implements Runnable {
 
             case Message.DEATH_COMMAND: // morir
                 padActivity.vibrar(1500);
-                padActivity.mayBeYouWantRestart();
-                //padA.cuentaAtras();
-                cuentaAtras();
+                SoundManager.getInstance(padActivity.getApplicationContext()).playDeathSound();
+                padActivity.goToMenu();
+                break;
+            case Message.WIN_COMMAND:
+                SoundManager.getInstance(padActivity.getApplicationContext()).stopTurboSound();
                 break;
         }
     }

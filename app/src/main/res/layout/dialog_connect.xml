@@ -13,8 +13,9 @@
         android:layout_width="@dimen/round_button_size"
         android:layout_height="@dimen/round_button_size"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/round_button_grey"
         android:clickable="true"
         android:contentDescription="@string/accept_connection"
@@ -23,7 +24,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
-        app:layout_constraintTop_toTopOf="@+id/guideline11"
+        app:layout_constraintTop_toBottomOf="@+id/puerto"
         app:srcCompat="@drawable/ic_check" />
 
     <ImageButton
@@ -31,8 +32,9 @@
         android:layout_width="@dimen/round_button_size"
         android:layout_height="@dimen/round_button_size"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/round_button_grey"
         android:clickable="true"
         android:contentDescription="@string/cancel"
@@ -43,15 +45,14 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline10"
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline11" />
+        app:layout_constraintTop_toBottomOf="@+id/puerto" />
 
 
     <EditText
         android:id="@+id/username"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="16dp"
         android:autofillHints="@string/usuario"
         android:background="@drawable/rounded_edit_text"
         android:hint="@string/usuario"
@@ -60,14 +61,14 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:shadowColor="@color/lightGrey"
-        android:textColor="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@+id/ip"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textColor="@color/darkGrey"
+        app:layout_constraintBottom_toTopOf="@id/ip"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
         android:id="@+id/ip"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:autofillHints="@string/ip"
@@ -78,16 +79,15 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:shadowColor="@color/lightGrey"
-        android:textColor="@android:color/black"
+        android:textColor="@color/darkGrey"
         app:layout_constraintBottom_toTopOf="@+id/puerto"
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <EditText
         android:id="@+id/puerto"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="32dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="32dp"
         android:autofillHints="@string/puerto"
         android:background="@drawable/rounded_edit_text"
         android:fontFamily="sans-serif"
@@ -97,8 +97,7 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:shadowColor="@color/lightGrey"
-        android:textColor="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@+id/guideline11"
+        android:textColor="@color/darkGrey"
         app:layout_constraintTop_toBottomOf="@+id/ip" />
 
     <android.support.constraint.Guideline
@@ -108,13 +107,17 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline11"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="0dp"
-        app:layout_constraintGuide_percent="0.75" />
+        android:layout_marginTop="16dp"
+        android:text="@string/connection_title"
+        android:textAlignment="center"
+        android:textColor="@color/darkGrey"
+        android:textSize="22sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="283dp" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -17,4 +17,20 @@
     <string name="exit_game_confirmation">¿Seguro que quieres volver al menú?</string>
     <string name="exit_info">Esta acción finalizará tu partida actual.</string>
     <string name="connecting">Connecting...</string>
+    <string name="splash_background">Splash screen background.</string>
+    <string name="killer_pad_logo">Killer Pad logo.</string>
+    <string name="accept_button">Accept</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="batmobile_ship">Batmobile ship</string>
+    <string name="octane_ship">Octane ship</string>
+    <string name="marauder_ship">Marauder ship</string>
+    <string name="boost">BOOST</string>
+    <string name="shoot">SHOOT!!!</string>
+    <string name="dash">DASH</string>
+    <string name="help_button">Help</string>
+    <string name="color_picker">Color Picker</string>
+    <string name="ship_picker">Ship Picker</string>
+    <string name="scores_button">Scores</string>
+    <string name="settings_button">Settings</string>
+    <string name="connection_title">Connection settings</string>
 </resources>
