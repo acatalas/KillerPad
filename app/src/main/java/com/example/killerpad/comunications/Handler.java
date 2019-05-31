@@ -181,6 +181,7 @@ public class Handler implements Runnable {
         // >> Hex color value
         SharedPreferences prefs = this.padA.getSharedPreferences("savedPrefs", MODE_PRIVATE);
         String color = prefs.getString("color", "ffffff");
+        String shipType = prefs.getString("ship", ConnectionResponse.ShipType.OCTANE.name());
         color = "#" + color;
 
         //Envia un mensaje utilizando el protocolo de la aplicación para crear un mando nuevo
@@ -191,7 +192,7 @@ public class Handler implements Runnable {
                 .withConnection(ConnectionResponse.Builder.builder()
                         .withColor(color)
                         .withUserName(user)
-                        .withShipType("FAST").build())
+                        .withShipType(ConnectionResponse.ShipType.valueOf(shipType)).build())
                 .build();
 
         //Convierte el mensaje a JSON
