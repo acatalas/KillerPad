@@ -183,7 +183,7 @@ public class Handler implements Runnable {
                 padActivity.goToMenu();
                 break;
             case Message.WIN_COMMAND:
-                SoundManager.getInstance(padActivity.getApplicationContext()).stopTurboSound();
+                SoundManager.getInstance(padActivity.getApplicationContext()).startTurboSound();
                 break;
         }
     }
