@@ -11,8 +11,9 @@ import android.widget.Button;
 
 import com.example.killerpad.comunications.Handler;
 import com.example.killerpad.comunications.Message;
+import com.example.killerpad.sound.SoundManager;
 
-public class BoostFragment extends Fragment implements View.OnTouchListener {
+public class BoostFragment extends Fragment {
 
     private Button bBoost;
     private PadActivity activity;
@@ -21,6 +22,7 @@ public class BoostFragment extends Fragment implements View.OnTouchListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -33,7 +35,7 @@ public class BoostFragment extends Fragment implements View.OnTouchListener {
 
         //Añade los Listeners al botón de boost
         this.bBoost = v.findViewById(R.id.boost_btn);
-        bBoost.setOnTouchListener(this);
+        bBoost.setOnTouchListener(new BoostListener());
 
         this.activity = (PadActivity)getActivity();
 
@@ -52,18 +54,22 @@ public class BoostFragment extends Fragment implements View.OnTouchListener {
         this.handler.sendKillerAction(Message.TURBO_END_COMMAND);
     }*/
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    private class BoostListener implements View.OnTouchListener {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
 
-        int button = v.getId();
+                handler.sendKillerAction(Message.TURBO_START_COMMAND);
+                SoundManager.getInstance(getActivity()).startTurboSound();
 
-        if(event.getAction() == MotionEvent.ACTION_BUTTON_PRESS && button == R.id.boost_btn){
-            this.handler.sendKillerAction(Message.TURBO_START_COMMAND);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+
+                handler.sendKillerAction(Message.TURBO_END_COMMAND);
+                SoundManager.getInstance(getActivity()).stopTurboSound();
+            }
+
             return true;
         }
-        else if (event.getAction() == MotionEvent.ACTION_BUTTON_RELEASE){
-            this.handler.sendKillerAction(Message.TURBO_END_COMMAND);
-        }
-        return false;
+
     }
 }

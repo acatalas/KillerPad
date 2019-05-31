@@ -9,8 +9,10 @@ import com.example.killerpad.R;
 
 public class SoundManager {
     private final int SHOOT_SOUND;
-    private final int BOOST_SOUND;
+    private final int TURBO_SOUND;
     private final int DASH_SOUND;
+
+    private int turboStream;
 
     private Context context;
     private SoundPool soundPool;
@@ -21,7 +23,7 @@ public class SoundManager {
     private SoundManager(Context context){
         soundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
         SHOOT_SOUND = soundPool.load(context, R.raw.shot, 1);
-        BOOST_SOUND = soundPool.load(context, R.raw.boost, 1);
+        TURBO_SOUND = soundPool.load(context, R.raw.boost, 1);
         DASH_SOUND = soundPool.load(context, R.raw.jump, 1);
 
         if(Math.random() < 0.5){
@@ -48,11 +50,11 @@ public class SoundManager {
     }
 
     public void startTurboSound(){
-        soundPool.play(BOOST_SOUND, 1, 1, 0, 0,1);
+        turboStream = soundPool.play(TURBO_SOUND, 1, 1, 0, 0,1);
     }
 
     public void stopTurboSound(){
-        soundPool.stop(BOOST_SOUND);
+        soundPool.stop(turboStream);
     }
 
     public void playDeathSound(){
