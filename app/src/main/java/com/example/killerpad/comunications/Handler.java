@@ -3,21 +3,22 @@ package com.example.killerpad.comunications;
 import android.content.SharedPreferences;
 import android.util.Log;
 import com.example.killerpad.PadActivity;
+import com.example.killerpad.R;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.SocketException;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class Handler implements Runnable {
-    private PadActivity padA;
+    private PadActivity padActivity;
     private Socket socket;
     private String user;
-    private String recieverId;
+    private String recieverIp;
     private String senderId;
     private int port;
     private BufferedReader in;
@@ -25,30 +26,29 @@ public class Handler implements Runnable {
     private boolean alive;
     public boolean connected;
 
-    private static String TAG = "handler";
-
     public Handler(PadActivity activity, String user, String ip, int port) {
-        this.padA = activity;
+        this.padActivity = activity;
         this.user = user;
-        this.recieverId = ip;
+        this.recieverIp = ip;
         this.port = port;
-        this.alive = true;
-        this.connected = false;
+        alive = true;
+        connected = false;
     }
 
     public void setAlive(boolean alive) {
         this.alive = alive;
     }
+    public boolean isConnected() {return connected;}
 
     public void setConnection() {
 
         // Mientras no hay conexión intentar conectarse...
         while (this.socket == null) {
             try {
-                socket = new Socket(this.recieverId, this.port);
+                socket = new Socket(this.recieverIp, this.port);
                 Thread.sleep(200);
             } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
+                Log.d("HANDLER_SET_CONNECTION", e.toString());
             }
         }
 
@@ -57,9 +57,10 @@ public class Handler implements Runnable {
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+            socket.setSoTimeout(3500);
         } catch (IOException e) {
             socket = null;
-            e.printStackTrace();
+            Log.d("HANDLER_SET_TIMEOUT", e.toString());
         }
 
         connected = true;
@@ -80,10 +81,10 @@ public class Handler implements Runnable {
             try {
                 //Con el método listenServer escucha e interpreta los mensajes del servidor.
                 listenServer();
+                sendTimeoutMessage();
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
-                Log.d(TAG, "handler run excepcion");
+                Log.d("HANDLER_ERROR_ALIVE", e.toString());
             }
         }
 
@@ -99,7 +100,7 @@ public class Handler implements Runnable {
         }
 
         for (int i = 10; i >= 0; i--) {
-            padA.cuentaAtras();
+            padActivity.cuentaAtras();
             try {
                 Thread.sleep(1100);
             } catch (InterruptedException e) {
@@ -125,51 +126,57 @@ public class Handler implements Runnable {
         }
     }
 
-    private void sendDisconnectMessage(){
-        out.println(Message.DISCONNECTION_COMMAND);
-    }
-
     public void listenServer() {
 
         try {
-            String data = this.in.readLine();
-
-            Log.d(TAG, data);
+            String data = in.readLine();
 
             // Si el mensaje no es null se procesa.
             if (data != null) {
-                Log.d(TAG, "datos recibidos = " + data);
                 processGameMessage(data);
             }
         } catch (IOException e) {
             //Si salta excepción se notifica al user.
-            Log.d(TAG, "handler listenServer: IOexception!!!!");
-            this.padA.alertUser();//OK
+            Log.d("HANDLER_ERROR_READ", e.getMessage());
+            this.padActivity.showAlertDialog(R.string.error_connexion);//OK
+            disconnect();
         }
     }
 
     //Implementa el protocolo de aplicación, discrimina los mensajes y gestiona el comando.
     private void processGameMessage(String data) {
+        //Ignore status requests
+        if(data.equalsIgnoreCase(Message.STATUS_REQUEST)){
+            return;
+        }
+
+        Log.d("HANDLER_RECIEVE", data);
+
         Message message = Message.readMessage(data);
 
         switch (message.getCommand()) {
             case Message.PAD_CONNECTED:
-                //Cuando se establezca conexión el dialog del Spinner se oculta.
-                padA.getSpinner().cancel();
-                //TODO: pad Connected
+                padActivity.getSpinner().cancel(); //Cuando se establezca conexión el dialog del Spinner se oculta.
+                break;
+
             case Message.PAD_NOT_CONNECTED:
-                //TODO: pad not connected
+                padActivity.getSpinner().dismiss();
+                padActivity.showAlertDialog(R.string.error_game_started);
+                disconnect();
+
             case Message.DAMAGE_COMMAND: // cuando la nave recibe daño
-                padA.vibrar(300);
+                padActivity.vibrar(300);
                 //TODO: setDamage(message.getDamage())
                 break;
+
             case Message.KILL_COMMAND: // cuando la nave mata, suma puntos
-                padA.updateScores(1);
+                padActivity.updateScores(1);
                 //TODO: cuantos puntos suma la nave cuando mata a alguien
                 break;
+
             case Message.DEATH_COMMAND: // morir
-                padA.vibrar(1500);
-                padA.mayBeYouWantRestart();
+                padActivity.vibrar(1500);
+                padActivity.mayBeYouWantRestart();
                 //padA.cuentaAtras();
                 cuentaAtras();
                 break;
@@ -179,16 +186,15 @@ public class Handler implements Runnable {
     private void sendConnectionMessage() {
         // Cargar el color de la nave de shared preferences
         // >> Hex color value
-        SharedPreferences prefs = this.padA.getSharedPreferences("savedPrefs", MODE_PRIVATE);
-        String color = prefs.getString("color", "ffffff");
+        SharedPreferences prefs = this.padActivity.getSharedPreferences("savedPrefs", MODE_PRIVATE);
+        String color = prefs.getString("color", "#FF0000");
         String shipType = prefs.getString("ship", ConnectionResponse.ShipType.OCTANE.name());
-        color = "#" + color;
 
         //Envia un mensaje utilizando el protocolo de la aplicación para crear un mando nuevo
         // mandando como parámetros el usuario, el color y la ip destino y origen
         Message message = Message.Builder
                 .builder(Message.CONNECTION_FROM_PAD, senderId)
-                .withReceiverId(recieverId)
+                .withReceiverId(recieverIp)
                 .withConnection(ConnectionResponse.Builder.builder()
                         .withColor(color)
                         .withUserName(user)
@@ -197,8 +203,17 @@ public class Handler implements Runnable {
 
         //Convierte el mensaje a JSON
         String json = Message.convertMessageToJson(message);
-        Log.d("JSON", json);
+        Log.d("HANDLER_SEND", json);
         out.println(json);
+    }
+
+    private void sendTimeoutMessage() {
+        out.println(Message.STATUS_REQUEST);
+    }
+
+    private void sendDisconnectMessage(){
+        out.println(Message.DISCONNECTION_COMMAND);
+        Log.d("HANDLER_SEND", Message.DISCONNECTION_COMMAND);
     }
 
     //Envia una accion al mando
@@ -208,7 +223,7 @@ public class Handler implements Runnable {
                 .build();
 
         String json = Message.convertMessageToJson(message);
-        Log.d("JSON", json);
+        Log.d("HANDLER_SEND", json);
 
         out.println(json);
     }
@@ -222,7 +237,7 @@ public class Handler implements Runnable {
                 .build();
 
         String json = Message.convertMessageToJson(message);
-        Log.d("JSON", json);
+        Log.d("HANDLER_SEND", json);
 
         out.println(json);
     }

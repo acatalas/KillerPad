@@ -1,20 +1,15 @@
 package com.example.killerpad;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
-
-
-import org.w3c.dom.Text;
 
 public class BoardFragment extends Fragment{
     private TextView scoreTV;
@@ -53,21 +48,21 @@ public class BoardFragment extends Fragment{
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_exit);
 
-        FloatingActionButton bAceptar = dialog.findViewById(R.id.byeB);
-        FloatingActionButton bCancelar = dialog.findViewById(R.id.cancelByeB);
+        ImageButton btnAceptar = dialog.findViewById(R.id.btn_accept);
+        ImageButton btnCancelar = dialog.findViewById(R.id.btn_cancel);
 
         //evento al pular boton aceptar: configurar ursName, ip, puerto
-        bAceptar.setOnClickListener(new View.OnClickListener(){
+        btnAceptar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 dialog.cancel();
-                ((PadActivity) getActivity()).sayBye();
+                ((PadActivity) getActivity()).disconnect();
 
             }
         });
 
         //evento al pular boton aceptar: configurar ursName, ip, puerto
-        bCancelar.setOnClickListener(new View.OnClickListener(){
+        btnCancelar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 dialog.cancel();

@@ -4,19 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/backgroundrepeat"
+    android:background="@color/whiteSemi"
     android:minWidth="300dp"
     android:minHeight="200dp">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/exit_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        android:text="¿Seguro que quieres volver al menú?"
-        android:textColor="@color/colorWhite"
+        android:text="@string/exit_game_confirmation"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
@@ -25,48 +25,48 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/exit_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Esta acción finalizará tu partida actual."
-        android:textColor="@color/colorWhite"
+        android:text="@string/exit_info"
+        android:textColor="@android:color/black"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/exit_header" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/byeB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageButton
+        android:id="@+id/btn_accept"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/round_button_grey"
         android:clickable="true"
         android:paddingBottom="4dp"
-        app:backgroundTint="@color/colorWhitesemi"
+        android:src="@drawable/ic_check"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/cancelByeB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageButton
+        android:id="@+id/btn_cancel"
+        android:layout_width="@dimen/round_button_size"
+        android:layout_height="@dimen/round_button_size"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/round_button_grey"
         android:clickable="true"
         android:paddingBottom="4dp"
-        app:backgroundTint="@color/colorWhitesemi"
+        android:src="@drawable/ic_delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
-        app:srcCompat="@android:drawable/ic_delete" />
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"

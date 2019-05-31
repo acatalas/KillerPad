@@ -41,9 +41,9 @@ public class MenuActivity extends AppCompatActivity {
 
 
     // carga las preferencias de las shared preferences
-    public String loadPreferences(String key){
+    public String loadPreferences(String key, String defaultValue){
         SharedPreferences prefs = getSharedPreferences("savedPrefs", MODE_PRIVATE);
-        String restoredText = prefs.getString(key, "");
+        String restoredText = prefs.getString(key, defaultValue);
         return restoredText;
     }
 

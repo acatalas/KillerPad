@@ -2,17 +2,17 @@
 <resources>
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name ="colorWhitesemi">#4FFFFFFF</color>
-    <color name="colorAccent">#FF00A1</color>
-    <color name="colorRed">#FF0000</color>
-    <color name="colorLima">#A7FF18</color>
-    <color name="colorOrange">#FFA900</color>
-    <color name="colorFucsia">#f24694</color>
-    <color name="colorAquaMarine">#11bfb9</color>
-    <color name="colorWhite">#FFFFFF</color>
-    <color name="colorYellow">#F0EB3B</color>
-    <color name="colorPurple">#6E28E0</color>
-    <color name="colorBlue">#7AAEF9</color>
-    <color name="fucsia">#FF0045</color>
+    <color name ="whiteSemi">#4FFFFFFF</color>
+    <color name="colorAccent">#EC407A</color>
+    <color name="red">#FF0000</color>
+    <color name="lime">#A7FF18</color>
+    <color name="orange">#FFA900</color>
+    <color name="fuchsia">#EC407A</color>
+    <color name="aquaMarine">#11bfb9</color>
+    <color name="white">#FFFFFF</color>
+    <color name="yellow">#F0EB3B</color>
+    <color name="purple">#6E28E0</color>
+    <color name="blue">#7AAEF9</color>
+    <color name="lightGrey">#E6E6E6</color>
 
 </resources>

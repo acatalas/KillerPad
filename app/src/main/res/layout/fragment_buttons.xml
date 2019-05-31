@@ -13,7 +13,7 @@
         android:layout_marginBottom="32dp"
         android:background="@drawable/rounded_color_picker"
         android:text="SHOOT!!!"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -26,7 +26,7 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/rounded_color_picker"
         android:text="DASH"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/send"
         app:layout_constraintEnd_toStartOf="@+id/send" />
