@@ -15,7 +15,6 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
 
     private Button bSend;
     private Button bDash;
-    private Button bPowerUp;
     private PadActivity activity;
     private Handler handler;
 
@@ -32,15 +31,12 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
         //almacena el handler.
         this.handler = ((PadActivity) this.getActivity()).getHandler();
 
-        //Añade los Listeners a los botones de disparo y dash y power up
+        //Añade los Listeners a los botones de disparo y dash
         this.bSend = v.findViewById(R.id.send);
         bSend.setOnClickListener(this);
 
         this.bDash = v.findViewById(R.id.dash);
         bDash.setOnClickListener(this);
-
-        this.bPowerUp = v.findViewById(R.id.powerUp);
-        bPowerUp.setOnClickListener(this);
 
         this.activity = (PadActivity)getActivity();
 
@@ -61,10 +57,5 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
             this.handler.sendKillerAction(Message.SHOOT_COMMAND);
 
         }
-        //botón de powerUp
-        else if (button == R.id.powerUp){
-            this.handler.sendKillerAction(Message.POWERUP_COMMAND);
-        }
-
     }
 }

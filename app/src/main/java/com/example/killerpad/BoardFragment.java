@@ -32,15 +32,15 @@ public class BoardFragment extends Fragment{
         View v = inflater.inflate(R.layout.fragment_board, container, false);
 
         this.scoreTV = (TextView) v.findViewById(R.id.scoreTV);
-        this.exitB = (Button) v.findViewById((R.id.exitB));
+        //this.exitB = (Button) v.findViewById((R.id.exitB));
 
         // Volver al menu
-        this.exitB.setOnClickListener(new View.OnClickListener() {
+        /*this.exitB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 askForConfirmation();
             }
-        });
+        });*/
 
         return v;
     }
