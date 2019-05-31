@@ -7,13 +7,12 @@
 
     <com.example.killerpad.JoystickView
         android:id="@+id/joystick_1"
-        android:layout_width="170sp"
-        android:layout_height="170sp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="230sp"
+        android:layout_height="230sp"
+        android:layout_marginStart="57dp"
+        android:layout_marginEnd="94dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
