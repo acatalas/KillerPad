@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import android.widget.ImageView;
 import com.example.killerpad.color_picker.ColorPickerDialog;
 import com.example.killerpad.color_picker.OnColorChangedListener;
 import com.example.killerpad.comunications.ConnectionResponse;
+import com.example.killerpad.scores.ScoreActivity;
 
 
 /**
@@ -29,6 +29,7 @@ public class MenuFragment extends Fragment{
     private ImageButton btnColorPicker;
     private ImageButton btnShipPicker;
     private ImageButton btnSettings;
+    private ImageButton btnScores;
 
     //Dialogs
     private ColorPickerDialog colorPickerDialog;
@@ -97,6 +98,14 @@ public class MenuFragment extends Fragment{
                     btnColorPicker.setVisibility(View.INVISIBLE);
                 }
 
+            }
+        });
+
+        btnScores = v.findViewById(R.id.btnScores);
+        btnScores.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ScoreActivity.class));
             }
         });
 

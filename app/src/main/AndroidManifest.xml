@@ -27,6 +27,9 @@
         <activity
             android:name=".MenuActivity"
             android:screenOrientation="sensorLandscape"></activity>
+        <activity
+            android:name=".scores.ScoreActivity"
+            android:screenOrientation="sensorLandscape"></activity>
     </application>
 
 </manifest>

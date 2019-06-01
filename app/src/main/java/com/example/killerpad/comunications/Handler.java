@@ -113,12 +113,11 @@ public class Handler implements Runnable {
     // Método para cerrar la conexión entre servidor y cliente. Envia un mensaje avisando al servidor
     public void disconnect() {
 
-        sendDisconnectMessage();
-
         alive = false;
 
         try {
             if (this.socket != null) {
+                sendDisconnectMessage();
                 this.socket.close();
                 this.socket = null;
             }
@@ -174,15 +173,17 @@ public class Handler implements Runnable {
 
             case Message.KILL_COMMAND: // cuando la nave mata, suma puntos
                 padActivity.updateScores(1);
-                //TODO: cuantos puntos suma la nave cuando mata a alguien
                 break;
 
             case Message.DEATH_COMMAND: // morir
                 padActivity.vibrar(1500);
                 SoundManager.getInstance(padActivity.getApplicationContext()).playDeathSound();
+                padActivity.saveScore();
                 padActivity.goToMenu();
                 break;
             case Message.WIN_COMMAND:
+                padActivity.saveScore();
+                padActivity.goToMenu();
                 SoundManager.getInstance(padActivity.getApplicationContext()).startTurboSound();
                 break;
         }

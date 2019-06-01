@@ -32,5 +32,8 @@
     <string name="ship_picker">Ship Picker</string>
     <string name="scores_button">Scores</string>
     <string name="settings_button">Settings</string>
-    <string name="connection_title">Connection settings</string>
+    <string name="connection_title">Connection</string>
+    <string name="gamepad_settings">Gamepad settings</string>
+    <string name="score">Score</string>
+    <string name="top_scores">Top 10 scores</string>
 </resources>

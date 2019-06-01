@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.Vibrator;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -21,12 +20,11 @@ import android.widget.TextView;
 
 import com.example.killerpad.comunications.Handler;
 import com.example.killerpad.comunications.Message;
-import com.example.killerpad.sound.SoundManager;
+import com.example.killerpad.preferences_manager.SharedPreferencesManager;
 
 public class PadActivity extends AppCompatActivity implements JoystickView.JoystickListener {
 
     private Handler handler;
-    private int topScore;
     private int score;
 
     private Dialog spinner;
@@ -37,7 +35,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("PADACTIVITY","on create");
+        Log.d("PAD_ACTIVITY","on create");
 
         setContentView(R.layout.activity_pad);
 
@@ -51,11 +49,6 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         String ip = extras.getString("ip");
         int port = extras.getInt("port");
 
-        // Cargar TopScore de sharedPreferences
-        SharedPreferences prefs = getSharedPreferences("savedPrefs", MODE_PRIVATE);
-        topScore = Integer.parseInt(prefs.getString("topScore", "0"));
-        //atributo de clase que almacenará la puntuación del jugador en todo momento
-        // (empieza en 0 al ser una nueva partida)
         score = 0;
 
         // Crear los fragments
@@ -76,12 +69,15 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         super.onResume();
         //Oculta la barra con el nombre de la aplicación.
         getSupportActionBar().hide();
+        Log.d("PAD_ACTIVITY", "onResume");
     }
 
     @Override
     protected void onDestroy() {
+        Log.d("PAD_ACTIVITY", "onDestroy");
         super.onDestroy();
         dismissAllDialogs();
+        handler.disconnect();
 
     }
 
@@ -291,14 +287,10 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
     }
 
     //Método llamado por updateScores para almacenar la puntuación si hay record.
-    public void setTopScore(String key, int value){
-        this.topScore = value;
-
-        // Guarda el topScore
-        SharedPreferences.Editor sp;
-        sp = getSharedPreferences("savedPrefs", MODE_PRIVATE).edit();    // pq es "s"
-        sp.putString(key, String.valueOf(value));
-        sp.commit();
+    public void saveScore(){
+        String user = SharedPreferencesManager
+                .getString(this, SharedPreferencesManager.USER_KEY, "User");
+        SharedPreferencesManager.addScore(this, user, score);
     }
 
     //Recuperamos el boardfragment para poder acceder a su método getScoreTV para obtener la puntuación actual
@@ -309,30 +301,15 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
 
         final TextView text = bf.getScoreTV();
 
-        final int score = Integer.parseInt(text.getText().toString().split(" ")[1]);
-
-        //Utilizamos runOnUi para invocar al hilo que ha creado la jerarquía de vistas para evitar errores.
-        // Ya que como vamos a modificar vistas que forman parte de la jerarquía de vistas creada por PadActivity
-        // Por lo que el único hilo que puede realizar estas modificaciones es el de PadActivity.
+        this.score += points;
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
                 //se actualiza la puntuación de la vista
-                text.setText(String.valueOf(score + points));
+                text.setText("SCORE: " + score);
             }
         });
-
-        //actualizamos nuestro atributo de puntos para tener constancia de los puntos en to.do momento
-        // Después comparamos si la puntuación actual es superior a la TopScore que recuperamos
-        // al principio de las shared preferences, en caso afirmativo actualizamos el record con SetScores.
-
-        this.score += points;
-
-        if (this.score > this.topScore) {
-            setTopScore("topScore", this.score);
-        }
     }
 
     //Método para vibrar la durante el periodo de tiempo en milisegundos pasado por parámetro.
