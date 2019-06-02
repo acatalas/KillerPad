@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
 import com.example.killerpad.R;
 import com.example.killerpad.preferences_manager.SharedPreferencesManager;
-
 import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeMap;
@@ -24,7 +22,7 @@ public class ScoreActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_scores);
+        setContentView(R.layout.activity_scores);
         recyclerView = findViewById(R.id.score_list);
 
         // use this setting to improve performance if you know that changes

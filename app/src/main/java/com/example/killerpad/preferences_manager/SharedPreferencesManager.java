@@ -14,6 +14,7 @@ public class SharedPreferencesManager {
     public static String PORT_KEY = "port";
     public static String IP_KEY = "key";
     public static String COLOR_KEY = "color";
+    public static String SHIP_KEY = "ship";
 
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
@@ -26,7 +27,7 @@ public class SharedPreferencesManager {
     public static void saveString(Context context, String key, String value){
         sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        editor.putString(key, value);
+        editor.putString(key, value).commit();
     }
 
     public static Set<String> getScores(Context context){

@@ -1,9 +1,11 @@
 package com.example.killerpad.comunications;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import com.example.killerpad.PadActivity;
 import com.example.killerpad.R;
+import com.example.killerpad.preferences_manager.SharedPreferencesManager;
 import com.example.killerpad.sound.SoundManager;
 
 import java.io.BufferedReader;
@@ -175,6 +177,9 @@ public class Handler implements Runnable {
                 padActivity.updateScores(1);
                 break;
 
+            case Message.HEALTH_COMMAND:
+                //padActivity setHealth(message.getHealth())
+
             case Message.DEATH_COMMAND: // morir
                 padActivity.vibrar(1500);
                 SoundManager.getInstance(padActivity.getApplicationContext()).playDeathSound();
@@ -184,17 +189,20 @@ public class Handler implements Runnable {
             case Message.WIN_COMMAND:
                 padActivity.saveScore();
                 padActivity.goToMenu();
-                SoundManager.getInstance(padActivity.getApplicationContext()).startTurboSound();
+                SoundManager.getInstance(padActivity.getApplicationContext()).playVictorySound();
                 break;
         }
     }
 
     private void sendConnectionMessage() {
-        // Cargar el color de la nave de shared preferences
-        // >> Hex color value
-        SharedPreferences prefs = this.padActivity.getSharedPreferences("savedPrefs", MODE_PRIVATE);
-        String color = prefs.getString("color", "#FF0000");
-        String shipType = prefs.getString("ship", ConnectionResponse.ShipType.OCTANE.name());
+        Context context = padActivity.getApplicationContext();
+        String color = SharedPreferencesManager.getString(context,
+                SharedPreferencesManager.COLOR_KEY,
+                "#FF0000");
+
+        String shipType = SharedPreferencesManager.getString(context,
+                SharedPreferencesManager.SHIP_KEY,
+                ConnectionResponse.ShipType.BATMOBILE.name());
 
         //Envia un mensaje utilizando el protocolo de la aplicación para crear un mando nuevo
         // mandando como parámetros el usuario, el color y la ip destino y origen

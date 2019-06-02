@@ -8,10 +8,13 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.example.killerpad.R;
 
 public class ColorPickerDialog extends Dialog {
 
@@ -189,5 +192,7 @@ public class ColorPickerDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(new ColorPickerView(getContext(), listener, initialColor));
+        getWindow().setBackgroundDrawable(
+                new ColorDrawable(getContext().getResources().getColor(R.color.semiTransparentWhite)));
     }
 }

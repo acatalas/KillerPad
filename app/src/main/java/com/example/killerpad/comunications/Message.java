@@ -19,7 +19,7 @@ public class Message {
     public static final String MOVEMENT_COMMAND = "pad_move";
     public static final String SHOOT_COMMAND = "pad_shoot";
     public static final String DASH_COMMAND = "pad_dash";
-    public static final String HEALTH_POWERUP_COMMAND = "pad_health";
+    public static final String HEALTH_COMMAND = "pad_health";
     public static final String TURBO_START_COMMAND = "pad_turbo_start";
     public static final String TURBO_END_COMMAND = "pad_turbo_end";
     public static final String DISCONNECTION_COMMAND = "bye";
@@ -35,6 +35,7 @@ public class Message {
     private KillerAction action;
     private ConnectionResponse connectionResponse;
     private int damage;
+    private int health;
 
     private static final String EMPTY_STRING = "";
 
@@ -48,6 +49,7 @@ public class Message {
         this.action = builder.action;
         this.connectionResponse = builder.connectionResponse;
         this.damage = builder.damage;
+        this.health = builder.health;
     }
 
     public String getCommand() {
@@ -74,6 +76,8 @@ public class Message {
         return damage;
     }
 
+    public int getHealth() { return health; }
+
     public static Message readMessage(final String jsonStr) {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -82,7 +86,6 @@ public class Message {
             System.out.println(ex.getMessage());
             return Message.Builder.builder(EMPTY_STRING, EMPTY_STRING).build();
         }
-
     }
 
     public static String convertMessageToJson(final Message message) {
@@ -103,6 +106,7 @@ public class Message {
         private KillerAction action;
         private ConnectionResponse connectionResponse;
         private int damage;
+        private int health;
 
         public Builder(final String command, final String senderId) {
             this.command = command;
@@ -125,11 +129,6 @@ public class Message {
 
         public Builder withConnection(final ConnectionResponse connectionResponse) {
             this.connectionResponse = connectionResponse;
-            return this;
-        }
-
-        public Builder withDamage(final int damage) {
-            this.damage = damage;
             return this;
         }
 
