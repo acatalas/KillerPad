@@ -13,13 +13,15 @@ import android.widget.ImageView;
 import com.example.killerpad.comunications.ConnectionResponse;
 import com.example.killerpad.preferences_manager.SharedPreferencesManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ShipDialog extends Dialog {
     private ImageView batmobileButton;
     private ImageView octaneButton;
     private ImageView marauderButton;
     private int shipColor;
-
-
+    
     public ShipDialog(@NonNull Context context) {
         super(context);
         shipColor = Color.parseColor(SharedPreferencesManager.getString(context,
@@ -77,10 +79,13 @@ public class ShipDialog extends Dialog {
 
     }
 
-    public static Bitmap replaceColor(Bitmap src,int fromColor, int targetColor) {
+    public Bitmap replaceColor(Bitmap src,int fromColor, int targetColor) {
+        List<Integer> pixelList = new ArrayList<>();
+
         if(src == null) {
             return null;
         }
+
         // Source image size
         int width = src.getWidth();
         int height = src.getHeight();
@@ -91,7 +96,9 @@ public class ShipDialog extends Dialog {
         src.getPixels(pixels, 0, width, 0, 0, width, height);
 
         for(int x = 0; x < pixels.length; ++x) {
-            pixels[x] = (pixels[x] == fromColor) ? targetColor : pixels[x];
+            if(pixels[x] == fromColor){
+                pixels[x] = targetColor;
+            }
         }
 
         // create result bitmap output

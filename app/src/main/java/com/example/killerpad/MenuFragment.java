@@ -181,10 +181,6 @@ public class MenuFragment extends Fragment{
     private void showConfigDialog() {
         configurationDialog = new Dialog(this.getContext());
         configurationDialog.setContentView(R.layout.dialog_connect);
-
-        configurationDialog.getWindow().setBackgroundDrawable(
-                new ColorDrawable(getResources().getColor(R.color.semiTransparentWhite)));
-
         loadConfigurationDialog();
         configurationDialog.show();
 

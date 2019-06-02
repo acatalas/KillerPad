@@ -179,6 +179,7 @@ public class Handler implements Runnable {
 
             case Message.HEALTH_COMMAND:
                 //padActivity setHealth(message.getHealth())
+                SoundManager.getInstance(padActivity.getApplicationContext()).playPowerUpSound();
 
             case Message.DEATH_COMMAND: // morir
                 padActivity.vibrar(1500);
