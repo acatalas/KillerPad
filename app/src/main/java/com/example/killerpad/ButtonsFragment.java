@@ -1,16 +1,16 @@
 package com.example.killerpad;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
-import com.example.killerpad.comunications.Handler;
+import com.example.killerpad.comunications.PadHandler;
 import com.example.killerpad.comunications.Message;
 import com.example.killerpad.sound.SoundManager;
 
@@ -18,8 +18,11 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
     private Button bSend;
     private Button bDash;
     private PadActivity activity;
-    private Handler handler;
+    private PadHandler handler;
     private SoundManager soundManager;
+    private int bullets = 5;
+
+    private BoardFragment boardFragment;
 
     @Override
     public void onResume() {
@@ -45,6 +48,11 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
 
         this.activity = (PadActivity)getActivity();
 
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        boardFragment = (BoardFragment) fm.findFragmentById(R.id.board_container);
+
+
+
         return v;
     }
 
@@ -68,7 +76,20 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
          else if (button == R.id.send) {
             this.handler.sendKillerAction(Message.SHOOT_COMMAND);
             soundManager.playShootSound();
+            boardFragment.bulletCounter(this.bullets);
+            if(bullets==0){
+                setBullets(5);
+            }
+            else{
+                this.bullets--;
+            }
+
+
 
         }
+    }
+
+    public void setBullets(int bullets){
+        this.bullets = bullets;
     }
 }

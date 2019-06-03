@@ -12,7 +12,7 @@ public class SharedPreferencesManager {
     public static String SCORES_KEY = "scores";
     public static String USER_KEY = "user";
     public static String PORT_KEY = "port";
-    public static String IP_KEY = "key";
+    public static String IP_KEY = "ip";
     public static String COLOR_KEY = "color";
     public static String SHIP_KEY = "ship";
 

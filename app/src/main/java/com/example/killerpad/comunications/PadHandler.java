@@ -17,7 +17,7 @@ import java.net.Socket;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class Handler implements Runnable {
+public class PadHandler implements Runnable {
     private PadActivity padActivity;
     private Socket socket;
     private String user;
@@ -29,7 +29,7 @@ public class Handler implements Runnable {
     private boolean alive;
     public boolean connected;
 
-    public Handler(PadActivity activity, String user, String ip, int port) {
+    public PadHandler(PadActivity activity, String user, String ip, int port) {
         this.padActivity = activity;
         this.user = user;
         this.recieverIp = ip;
@@ -168,30 +168,31 @@ public class Handler implements Runnable {
                 padActivity.showAlertDialog(R.string.error_game_started);
                 disconnect();
 
-            case Message.DAMAGE_COMMAND: // cuando la nave recibe daño
-                padActivity.vibrar(300);
-                //padActivity.setDamage(message.getDamage())
-                break;
-
             case Message.KILL_COMMAND: // cuando la nave mata, suma puntos
                 padActivity.updateScores(1);
                 break;
 
             case Message.HEALTH_COMMAND:
-                //padActivity setHealth(message.getHealth())
+                //padActivity.setHealth(message.getHealth())
+                padActivity.vibrar(300);
                 SoundManager.getInstance(padActivity.getApplicationContext()).playPowerUpSound();
+                break;
 
             case Message.DEATH_COMMAND: // morir
                 padActivity.vibrar(1500);
-                SoundManager.getInstance(padActivity.getApplicationContext()).playDeathSound();
                 padActivity.saveScore();
-                padActivity.goToMenu();
+                SoundManager.getInstance(padActivity.getApplicationContext()).playDeathSound();
+                padActivity.showDeathAnimation();
                 break;
             case Message.WIN_COMMAND:
+                padActivity.vibrar(1500);
                 padActivity.saveScore();
-                padActivity.goToMenu();
                 SoundManager.getInstance(padActivity.getApplicationContext()).playVictorySound();
+                padActivity.showVictoryAnimation();
                 break;
+
+            case Message.POWER_UP_COMMAND:
+                SoundManager.getInstance(padActivity.getApplicationContext()).playPowerUpSound();
         }
     }
 

@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.killerpad.comunications.Handler;
+import com.example.killerpad.comunications.PadHandler;
 import com.example.killerpad.comunications.Message;
 import com.example.killerpad.sound.SoundManager;
 
@@ -17,7 +17,7 @@ public class BoostFragment extends Fragment {
 
     private Button bBoost;
     private PadActivity activity;
-    private Handler handler;
+    private PadHandler padHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class BoostFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_boost, container, false);
 
         //almacena el handler.
-        this.handler = ((PadActivity) this.getActivity()).getHandler();
+        padHandler = ((PadActivity) this.getActivity()).getHandler();
 
         //Añade los Listeners al botón de boost
         this.bBoost = v.findViewById(R.id.boost_btn);
@@ -59,12 +59,12 @@ public class BoostFragment extends Fragment {
         public boolean onTouch(View v, MotionEvent event) {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
 
-                handler.sendKillerAction(Message.TURBO_START_COMMAND);
+                padHandler.sendKillerAction(Message.TURBO_START_COMMAND);
                 SoundManager.getInstance(getActivity()).startTurboSound();
 
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                handler.sendKillerAction(Message.TURBO_END_COMMAND);
+                padHandler.sendKillerAction(Message.TURBO_END_COMMAND);
                 SoundManager.getInstance(getActivity()).stopTurboSound();
             }
 

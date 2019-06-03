@@ -30,11 +30,15 @@ public class MenuFragment extends Fragment{
     private ImageButton btnShipPicker;
     private ImageButton btnSettings;
     private ImageButton btnScores;
+    private ImageButton btnHelp;
 
     //Dialogs
     private ColorPickerDialog colorPickerDialog;
     private ShipDialog shipDialog;
     private Dialog configurationDialog;
+    private Dialog helpDialog;
+
+    private BoardFragment boardFragment;
 
 
     @Override
@@ -74,6 +78,15 @@ public class MenuFragment extends Fragment{
             @Override
             public void onClick(View v){
                 showShipPickerDialog();
+            }
+        });
+
+        //Help button
+        btnHelp = v.findViewById(R.id.btnHelp);
+        btnHelp.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                showHelpDialog();
             }
         });
 
@@ -184,6 +197,14 @@ public class MenuFragment extends Fragment{
         loadConfigurationDialog();
         configurationDialog.show();
 
+    }
+
+    //Invocado por btnHelp button.
+    // Ventana modal que muestra al usuario como funciona el juego.
+    private void showHelpDialog(){
+        this.helpDialog = new Dialog(this.getContext());
+        this.helpDialog.setContentView(R.layout.dialog_help);
+        this.helpDialog.show();
     }
 
     // pasado una clave y un editText, utilizando loadPreferences carga el valor de la clave

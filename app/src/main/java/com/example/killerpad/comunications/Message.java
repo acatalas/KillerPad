@@ -24,10 +24,7 @@ public class Message {
     public static final String TURBO_END_COMMAND = "pad_turbo_end";
     public static final String DISCONNECTION_COMMAND = "bye";
     public static final String WIN_COMMAND = "pad_win";
-
-    public enum ShipType {
-        FAST, BIG
-    }
+    public static final String POWER_UP_COMMAND = "pad_powerup";
 
     private String command;
     private String senderId;

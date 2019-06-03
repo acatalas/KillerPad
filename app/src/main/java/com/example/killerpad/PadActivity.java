@@ -1,10 +1,12 @@
 package com.example.killerpad;
 
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 
-import android.content.SharedPreferences;
+import android.content.res.Resources;
+import 	android.os.Handler;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.Vibrator;
@@ -15,22 +17,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.killerpad.comunications.Handler;
+import com.example.killerpad.comunications.PadHandler;
 import com.example.killerpad.comunications.Message;
 import com.example.killerpad.preferences_manager.SharedPreferencesManager;
 
 public class PadActivity extends AppCompatActivity implements JoystickView.JoystickListener {
 
-    private Handler handler;
+    private PadHandler handler;
     private int score;
 
     private Dialog spinner;
     private Dialog alertDialog;
     private Dialog exitConfirmation;
     private Dialog restart;
+
+    private BoardFragment boardFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +65,7 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
 
 
         // Crear el handler para establecer la conexión y arranca su hilo
-        this.handler = new Handler(this, user, ip, port);
+        this.handler = new PadHandler(this, user, ip, port);
 
         new Thread(this.handler).start();
 
@@ -117,6 +124,84 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
 
     }
 
+    public void showVictoryAnimation(){
+        setContentView(R.layout.victory_animation);
+
+        //imageview del logo
+        TextView titulo = (TextView) findViewById(R.id.victory_text);
+        //imageview del fondo
+        ImageView back = (ImageView) findViewById(R.id.spacebackground);
+
+        //animacion background, creamos el objectanimator y le pasamos la view a animar y su propiedad
+        ObjectAnimator scroll = ObjectAnimator.ofInt(back,"scrollX",
+                (back.getDrawable().getIntrinsicWidth() - Resources.getSystem().getDisplayMetrics().widthPixels));
+        //le indicamos que el scroll sera el ancho de toda la imagen menos el tamaño de la pantalla.
+        scroll.setDuration(4000); //durara 4 segundos
+        scroll.start();  //la iniciamos
+
+        //carga la animacion  del logo
+        Animation rotate = AnimationUtils.loadAnimation(this, R.anim.alpha_rotate_scale);
+        titulo.startAnimation(rotate);
+
+        //añadimos los listeners...
+        rotate.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            //listener cuando acabe la animación.
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //PadActivity.this.finish();   //para no volver a la slpash
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    public void showDeathAnimation(){
+        setContentView(R.layout.death_animation);
+
+        //imageview del logo
+        TextView titulo = (TextView) findViewById(R.id.death_text);
+        //imageview del fondo
+        ImageView back = (ImageView) findViewById(R.id.spacebackground);
+
+        //animacion background, creamos el objectanimator y le pasamos la view a animar y su propiedad
+        ObjectAnimator scroll = ObjectAnimator.ofInt(back,"scrollX",
+                (back.getDrawable().getIntrinsicWidth() - Resources.getSystem().getDisplayMetrics().widthPixels));
+        //le indicamos que el scroll sera el ancho de toda la imagen menos el tamaño de la pantalla.
+        scroll.setDuration(4000); //durara 4 segundos
+        scroll.start();  //la iniciamos
+
+        //carga la animacion  del logo
+        Animation rotate = AnimationUtils.loadAnimation(this, R.anim.alpha_rotate_scale);
+        titulo.startAnimation(rotate);
+
+        //añadimos los listeners...
+        rotate.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            //listener cuando acabe la animación.
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //PadActivity.this.finish();   //para no volver a la slpash
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+    }
     //Crea un dialog que aparece cuando el usuario pulsa el botón EXIT
     // El usuario puede confirmar si realmente desea salir (vuelta al menú) o cancelar.
     public void askForConfirmation() {
@@ -319,12 +404,16 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         vib.vibrate(duration);
     }
 
-    public Handler getHandler() {
+    public PadHandler getHandler() {
         return this.handler;
     }
 
     public Dialog getSpinner() {
         return spinner;
+    }
+
+    public void setHealth(int health){
+        boardFragment.updateHealth(health);
     }
 
     public void goToMenu(){

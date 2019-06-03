@@ -36,4 +36,11 @@
     <string name="gamepad_settings">Gamepad settings</string>
     <string name="score">Score</string>
     <string name="top_scores">Top 10 scores</string>
+    <string name="death_message">YOU GOT KILLED, KEEP TRYING TO BEAT THE KILLER GAME</string>
+    <string name="win_message">CONGRATULATIONS YOU ARE THE BIGGEST KILLER</string>
+    <string name="help_title">KILLER GAME</string>
+    <string name="help_content">En este juego deberá derrotar a todos sus rivales disparando sus naves o que interactuen con otros objetos que los puedan eliminar,
+    Se trata de un juego rápido y apasionante donde podrás escoger 3 tipos de nave pulsando en el botón de opciones y en el botones de nave consecuentemente, cada nave tiene
+    diferentes estadísticas asi que elige con precaución, también podrás darle tu toque de personalización pulsando la rueda de colores y escogiendo el que más te guste.
+        \n \n \n Para empezar a jugar deberás pulsar el botón de start y poner el nombre con el que aparecerás en pantalla, la dirección IP del servidor y el puerto.</string>
 </resources>
