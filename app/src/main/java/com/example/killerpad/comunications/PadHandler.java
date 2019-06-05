@@ -173,21 +173,21 @@ public class PadHandler implements Runnable {
                 break;
 
             case Message.HEALTH_COMMAND:
-                //padActivity.setHealth(message.getHealth())
+                padActivity.setHealth(message.getHealth());
                 padActivity.vibrar(300);
-                SoundManager.getInstance(padActivity.getApplicationContext()).playPowerUpSound();
+                SoundManager.getInstance(padActivity.getApplicationContext()).playHitSound();
                 break;
 
             case Message.DEATH_COMMAND: // morir
+                padActivity.setHealth(0);
                 padActivity.vibrar(1500);
                 padActivity.saveScore();
-                SoundManager.getInstance(padActivity.getApplicationContext()).playDeathSound();
                 padActivity.showDeathAnimation();
                 break;
+
             case Message.WIN_COMMAND:
                 padActivity.vibrar(1500);
                 padActivity.saveScore();
-                SoundManager.getInstance(padActivity.getApplicationContext()).playVictorySound();
                 padActivity.showVictoryAnimation();
                 break;
 
@@ -204,7 +204,7 @@ public class PadHandler implements Runnable {
 
         String shipType = SharedPreferencesManager.getString(context,
                 SharedPreferencesManager.SHIP_KEY,
-                ConnectionResponse.ShipType.BATMOBILE.name());
+                ShipType.BATMOBILE.name());
 
         //Envia un mensaje utilizando el protocolo de la aplicación para crear un mando nuevo
         // mandando como parámetros el usuario, el color y la ip destino y origen
@@ -214,7 +214,7 @@ public class PadHandler implements Runnable {
                 .withConnection(ConnectionResponse.Builder.builder()
                         .withColor(color)
                         .withUserName(user)
-                        .withShipType(ConnectionResponse.ShipType.valueOf(shipType)).build())
+                        .withShipType(ShipType.valueOf(shipType)).build())
                 .build();
 
         //Convierte el mensaje a JSON

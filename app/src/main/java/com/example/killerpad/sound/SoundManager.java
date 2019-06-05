@@ -15,6 +15,7 @@ public class SoundManager {
     private final int NO_BULLET_SOUND;
     private final int VICTORY_SOUND;
     private final int POWER_UP_SOUND;
+    private final int HIT_SOUND;
 
     private int turboStream;
     private boolean mpIsReleased = false;
@@ -34,6 +35,7 @@ public class SoundManager {
         NO_BULLET_SOUND = soundPool.load(context, R.raw.no_shots, 1);
         VICTORY_SOUND = soundPool.load(context, R.raw.victory, 1);
         POWER_UP_SOUND = soundPool.load(context, R.raw.power_up,1);
+        HIT_SOUND = soundPool.load(context, R.raw.hit_marker, 1);
 
         if(Math.random() < 0.5){
             mediaPlayer = MediaPlayer.create(context, R.raw.soul_die );
@@ -69,6 +71,8 @@ public class SoundManager {
     public void playDeathSound(){
         mediaPlayer.start();
     }
+
+    public void playHitSound() {soundPool.play(HIT_SOUND, 1, 1, 0, 0, 1);}
 
     public void playReloadSound() { soundPool.play(RELOAD_SOUND, 1, 1, 0, 0, 1);}
 

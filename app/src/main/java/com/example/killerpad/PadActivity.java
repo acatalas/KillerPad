@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.content.res.Resources;
-import 	android.os.Handler;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.Vibrator;
@@ -14,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -26,23 +24,22 @@ import android.widget.TextView;
 import com.example.killerpad.comunications.PadHandler;
 import com.example.killerpad.comunications.Message;
 import com.example.killerpad.preferences_manager.SharedPreferencesManager;
+import com.example.killerpad.sound.SoundManager;
 
 public class PadActivity extends AppCompatActivity implements JoystickView.JoystickListener {
 
     private PadHandler handler;
     private int score;
+    private BoardFragment boardFragment;
+    private ButtonsFragment buttonsFragment;
 
     private Dialog spinner;
     private Dialog alertDialog;
     private Dialog exitConfirmation;
-    private Dialog restart;
-
-    private BoardFragment boardFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("PAD_ACTIVITY","on create");
 
         setContentView(R.layout.activity_pad);
 
@@ -63,7 +60,6 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         //crea el dialog Spinner (Loading animation) que se mantendra hasta que se establezca la conexión.
         createSpinner();
 
-
         // Crear el handler para establecer la conexión y arranca su hilo
         this.handler = new PadHandler(this, user, ip, port);
 
@@ -74,18 +70,23 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
     @Override
     protected void onResume() {
         super.onResume();
-        //Oculta la barra con el nombre de la aplicación.
-        getSupportActionBar().hide();
-        Log.d("PAD_ACTIVITY", "onResume");
+        getSupportActionBar().hide(); //Oculta la barra con el nombre de la aplicación.
     }
 
     @Override
     protected void onDestroy() {
-        Log.d("PAD_ACTIVITY", "onDestroy");
         super.onDestroy();
         dismissAllDialogs();
         handler.disconnect();
 
+    }
+
+    public Fragment getBoardFragment(){
+        return boardFragment;
+    }
+
+    public Fragment getButtonsFragment(){
+        return buttonsFragment;
     }
 
     /* Crear un dialog informando de un error de conexión.
@@ -125,104 +126,80 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
     }
 
     public void showVictoryAnimation(){
-        setContentView(R.layout.victory_animation);
 
-        //imageview del logo
-        TextView titulo = (TextView) findViewById(R.id.victory_text);
-        //imageview del fondo
-        ImageView back = (ImageView) findViewById(R.id.spacebackground);
+        SoundManager.getInstance(getApplicationContext()).playVictorySound();
 
-        //animacion background, creamos el objectanimator y le pasamos la view a animar y su propiedad
-        ObjectAnimator scroll = ObjectAnimator.ofInt(back,"scrollX",
-                (back.getDrawable().getIntrinsicWidth() - Resources.getSystem().getDisplayMetrics().widthPixels));
-        //le indicamos que el scroll sera el ancho de toda la imagen menos el tamaño de la pantalla.
-        scroll.setDuration(4000); //durara 4 segundos
-        scroll.start();  //la iniciamos
-
-        //carga la animacion  del logo
-        Animation rotate = AnimationUtils.loadAnimation(this, R.anim.alpha_rotate_scale);
-        titulo.startAnimation(rotate);
-
-        //añadimos los listeners...
-        rotate.setAnimationListener(new Animation.AnimationListener() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onAnimationStart(Animation animation) {
+            public void run() {
 
-            }
+                setContentView(R.layout.victory_animation);
 
-            //listener cuando acabe la animación.
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                //PadActivity.this.finish();   //para no volver a la slpash
-            }
+                //imageview del logo
+                final TextView titulo = (TextView) findViewById(R.id.victory_text);
+                //imageview del fondo
+                final ImageView back = (ImageView) findViewById(R.id.spacebackground);
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+                //animacion background, creamos el objectanimator y le pasamos la view a animar y su propiedad
+                ObjectAnimator scroll = ObjectAnimator.ofInt(back,"scrollX",
+                        (back.getDrawable().getIntrinsicWidth() - Resources.getSystem().getDisplayMetrics().widthPixels));
 
+                //le indicamos que el scroll sera el ancho de toda la imagen menos el tamaño de la pantalla.
+                scroll.setDuration(4000); //durara 4 segundos
+
+                //carga la animacion  del logo
+                Animation zoom = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_animation);
+
+                //añadimos los listeners...
+                zoom.setAnimationListener(new AnimationToMenuListener());
+
+                scroll.start();  //la iniciamos
+
+                titulo.startAnimation(zoom);
             }
         });
+
     }
 
     public void showDeathAnimation(){
-        setContentView(R.layout.death_animation);
 
-        //imageview del logo
-        TextView titulo = (TextView) findViewById(R.id.death_text);
-        //imageview del fondo
-        ImageView back = (ImageView) findViewById(R.id.spacebackground);
+        SoundManager.getInstance(getApplicationContext()).playDeathSound();
 
-        //animacion background, creamos el objectanimator y le pasamos la view a animar y su propiedad
-        ObjectAnimator scroll = ObjectAnimator.ofInt(back,"scrollX",
-                (back.getDrawable().getIntrinsicWidth() - Resources.getSystem().getDisplayMetrics().widthPixels));
-        //le indicamos que el scroll sera el ancho de toda la imagen menos el tamaño de la pantalla.
-        scroll.setDuration(4000); //durara 4 segundos
-        scroll.start();  //la iniciamos
-
-        //carga la animacion  del logo
-        Animation rotate = AnimationUtils.loadAnimation(this, R.anim.alpha_rotate_scale);
-        titulo.startAnimation(rotate);
-
-        //añadimos los listeners...
-        rotate.setAnimationListener(new Animation.AnimationListener() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onAnimationStart(Animation animation) {
+            public void run() {
 
-            }
+                setContentView(R.layout.death_animation);
 
-            //listener cuando acabe la animación.
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                //PadActivity.this.finish();   //para no volver a la slpash
-            }
+                //imageview del logo
+                TextView titulo = (TextView) findViewById(R.id.death_text);
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+                //imageview del fondo
+                ImageView back = (ImageView) findViewById(R.id.spacebackground);
+
+                //animacion background, creamos el objectanimator y le pasamos la view a animar y su propiedad
+                ObjectAnimator scroll = ObjectAnimator.ofInt(back,"scrollX",
+                        (back.getDrawable().getIntrinsicWidth() - Resources.getSystem().getDisplayMetrics().widthPixels));
+
+                //le indicamos que el scroll sera el ancho de toda la imagen menos el tamaño de la pantalla.
+                scroll.setDuration(4000); //durara 4 segundos
+                scroll.start();  //la iniciamos
+
+                Animation zoom = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_animation);
+
+                //añadimos los listeners...
+                zoom.setAnimationListener(new AnimationToMenuListener());
+
+                titulo.startAnimation(zoom);
+
 
             }
         });
 
     }
-    //Crea un dialog que aparece cuando el usuario pulsa el botón EXIT
-    // El usuario puede confirmar si realmente desea salir (vuelta al menú) o cancelar.
-    public void askForConfirmation() {
-        //Creamos el Dialog y lo mostramos
-        exitConfirmation = new Dialog(this);
-        exitConfirmation.setContentView(R.layout.dialog_exit);
-        exitConfirmation.show();
 
-        //Recuperamos los botones de aceptar y cancelar para asignarles su correspondiente listener.
-        ImageButton btnAccept = exitConfirmation.findViewById(R.id.btn_accept);
-        ImageButton btnCancel = exitConfirmation.findViewById(R.id.btn_cancel);
-
-        //botón aceptar
-        btnAccept.setOnClickListener(new GoToMenuListener());
-
-        //botón cancelar
-        btnCancel.setOnClickListener(new CancelDialogListener(exitConfirmation));
-    }
-
+    //Método que crea el dialog con la animación del spinner loading.
     public void createSpinner(){
-        //Método que crea el dialog con la animación del spinner loading.
 
         //Crea el dialog
         spinner = new Dialog(this);
@@ -244,11 +221,11 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
 
         FragmentManager fm = getSupportFragmentManager();
 
-        Fragment board_fragment = fm.findFragmentById(R.id.board_container);
-        if (board_fragment == null) {
-            board_fragment = new BoardFragment();
+        boardFragment = (BoardFragment) fm.findFragmentById(R.id.board_container);
+        if (boardFragment == null) {
+            boardFragment = new BoardFragment();
             fm.beginTransaction()
-                    .add(R.id.board_container, board_fragment).commit();
+                    .add(R.id.board_container, boardFragment).commit();
 
         }
         Fragment joystick_fragment = fm.findFragmentById(R.id.joystick_container);
@@ -258,11 +235,11 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
                     .add(R.id.joystick_container, joystick_fragment).commit();
         }
 
-        Fragment buttons_fragment = fm.findFragmentById(R.id.buttons_container);
-        if (buttons_fragment == null) {
-            buttons_fragment = new ButtonsFragment();
+        buttonsFragment = (ButtonsFragment) fm.findFragmentById(R.id.buttons_container);
+        if (buttonsFragment == null) {
+            buttonsFragment = new ButtonsFragment();
             fm.beginTransaction()
-                    .add(R.id.buttons_container, buttons_fragment).commit();
+                    .add(R.id.buttons_container, buttonsFragment).commit();
         }
 
         Fragment boost_fragment = fm.findFragmentById(R.id.boost_container);
@@ -282,9 +259,6 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         }
         if(spinner != null){
             spinner.dismiss();
-        }
-        if(restart != null){
-            restart.dismiss();
         }
     }
 
@@ -350,15 +324,6 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
         });
 
     }*/
-
-    //Método llamado por el botón "Reparecer" del Dialog "Restart" para poner el
-    // marcador de puntos a 0 otra vez (Cada vez que el usuario muere y reaparece).
-    private void resetBoard() {
-        FragmentManager fm = getSupportFragmentManager();
-        BoardFragment bf = (BoardFragment) fm.findFragmentById(R.id.board_container);
-        TextView text = bf.getScoreTV();
-        text.setText("0");
-    }
 
     //Método para cortar la conexión y volver al menú.
     public void disconnect(){
@@ -432,6 +397,26 @@ public class PadActivity extends AppCompatActivity implements JoystickView.Joyst
             disconnect();
             goToMenu();
             finish();
+        }
+    }
+
+    private class AnimationToMenuListener implements Animation.AnimationListener{
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        //listener cuando acabe la animación.
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            startActivity(new Intent(PadActivity.this, MenuActivity.class));
+            finish();
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
         }
     }
 

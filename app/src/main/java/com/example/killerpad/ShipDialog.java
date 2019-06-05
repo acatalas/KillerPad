@@ -10,18 +10,15 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.example.killerpad.comunications.ConnectionResponse;
+import com.example.killerpad.comunications.ShipType;
 import com.example.killerpad.preferences_manager.SharedPreferencesManager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ShipDialog extends Dialog {
     private ImageView batmobileButton;
     private ImageView octaneButton;
     private ImageView marauderButton;
     private int shipColor;
-    
+
     public ShipDialog(@NonNull Context context) {
         super(context);
         shipColor = Color.parseColor(SharedPreferencesManager.getString(context,
@@ -35,7 +32,17 @@ public class ShipDialog extends Dialog {
         setContentView(R.layout.dialog_ship_picker);
         addShipListeners();
 
-        changeShipColor(getContext(), shipColor);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+
+        changeShipColor(BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.octane, options), shipColor, R.id.octane);
+
+        changeShipColor(BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.batmobile, options), shipColor, R.id.batmobile);
+
+        changeShipColor(BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.marauder, options), shipColor, R.id.marauder);
 
     }
 
@@ -50,7 +57,7 @@ public class ShipDialog extends Dialog {
             public void onClick(View v) {
                 SharedPreferencesManager.saveString(getContext(),
                         SharedPreferencesManager.SHIP_KEY,
-                        ConnectionResponse.ShipType.BATMOBILE.name());
+                        ShipType.BATMOBILE.name());
 
                 dismiss();
             }
@@ -61,7 +68,7 @@ public class ShipDialog extends Dialog {
             public void onClick(View v) {
                 SharedPreferencesManager.saveString(getContext(),
                         SharedPreferencesManager.SHIP_KEY,
-                        ConnectionResponse.ShipType.OCTANE.name());
+                        ShipType.OCTANE.name());
 
                 dismiss();
             }
@@ -72,62 +79,41 @@ public class ShipDialog extends Dialog {
             public void onClick(View v) {
                 SharedPreferencesManager.saveString(getContext(),
                         SharedPreferencesManager.SHIP_KEY,
-                        ConnectionResponse.ShipType.MARAUDER.name());
+                        ShipType.MARAUDER.name());
                 dismiss();
             }
         });
 
     }
 
-    public Bitmap replaceColor(Bitmap src,int fromColor, int targetColor) {
-        List<Integer> pixelList = new ArrayList<>();
 
-        if(src == null) {
-            return null;
-        }
-
+    public static Bitmap replaceGreenColor(Bitmap bitmap, int color) {
         // Source image size
-        int width = src.getWidth();
-        int height = src.getHeight();
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
 
         int[] pixels = new int[width * height];
 
-        //get pixels
-        src.getPixels(pixels, 0, width, 0, 0, width, height);
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
 
         for(int x = 0; x < pixels.length; ++x) {
-            if(pixels[x] == fromColor){
-                pixels[x] = targetColor;
+            if (Color.green(pixels[x]) == Color.green(Color.GREEN)) {
+                pixels[x] = color;
             }
         }
 
-        // create result bitmap output
-        Bitmap result = Bitmap.createBitmap(width, height, src.getConfig());
+        Bitmap result = Bitmap.createBitmap(width, height, bitmap.getConfig());
 
-        //set pixels
         result.setPixels(pixels, 0, width, 0, 0, width, height);
 
         return result;
     }
 
-    public void changeShipColor(Context context, int shipColor){
+    public void changeShipColor(Bitmap bitmap, int shipColor, int imageView){
 
-        Bitmap bitmap = replaceColor(
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.octane),
-                Color.GREEN, shipColor);
+        bitmap = replaceGreenColor(bitmap, shipColor);
 
-        ((ImageView)findViewById(R.id.octane)).setImageBitmap(bitmap);
-
-        bitmap = replaceColor(
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.batmobile),
-                Color.GREEN, shipColor);
-        ((ImageView)findViewById(R.id.batmobile)).setImageBitmap(bitmap);
-
-        bitmap = replaceColor(
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.marauder),
-                Color.GREEN, shipColor);
-
-        ((ImageView)findViewById(R.id.marauder)).setImageBitmap(bitmap);
+        ((ImageView)findViewById(imageView)).setImageBitmap(bitmap);
 
     }
 }

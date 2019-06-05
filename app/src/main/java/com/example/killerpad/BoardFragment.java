@@ -1,6 +1,9 @@
 package com.example.killerpad;
 
 import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,21 +14,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.killerpad.comunications.ConnectionResponse;
+import com.example.killerpad.comunications.ShipType;
 import com.example.killerpad.preferences_manager.SharedPreferencesManager;
+import com.example.killerpad.sound.SoundManager;
 
 public class BoardFragment extends Fragment{
     private TextView scoreTV;
     private ProgressBar healthTV;
     private ImageView shipTV;
-    private String ship;
+    private ShipType ship;
     private int health;
+    private int color;
     private static String TAG = "handler";
 
     private ButtonsFragment buttonsFragment;
@@ -41,24 +46,24 @@ public class BoardFragment extends Fragment{
 
         View v = inflater.inflate(R.layout.fragment_board, container, false);
 
-        this.scoreTV = (TextView) v.findViewById(R.id.scoreTV);
-        this.healthTV = (ProgressBar) v.findViewById(R.id.healthTV);
+        scoreTV = v.findViewById(R.id.scoreTV);
 
         //Añadido la nave escogida al principio
-        this.shipTV = (ImageView) v.findViewById(R.id.shipTV);
+        shipTV = v.findViewById(R.id.shipTV);
 
-        ship = SharedPreferencesManager.getString(getContext(), SharedPreferencesManager.SHIP_KEY, ConnectionResponse.ShipType.OCTANE.name());
-        if (ship == "MARAUDER"){
-            this.shipTV.setBackgroundResource(R.drawable.marauder);
-        }
-        else if (ship == "BATMOBILE"){
-            this.shipTV.setBackgroundResource(R.drawable.batmobile);
-        }
-        else{
-            this.shipTV.setBackgroundResource(R.drawable.octane);
-        }
+        color = Color.parseColor(SharedPreferencesManager.getString(getContext(),
+                SharedPreferencesManager.COLOR_KEY, "#FF0000"));
 
+        ship = ShipType.valueOf(
+                SharedPreferencesManager.getString(getContext(),
+                        SharedPreferencesManager.SHIP_KEY,
+                        ShipType.OCTANE.name()));
 
+        healthTV = v.findViewById(R.id.healthTV);
+        healthTV.setMax(ship.getHealth());
+        health = ship.getHealth();
+
+        drawShip();
 
         return v;
     }
@@ -67,7 +72,7 @@ public class BoardFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        buttonsFragment = new ButtonsFragment();
+        buttonsFragment = (ButtonsFragment) ((PadActivity)(getActivity())).getButtonsFragment();
     }
 
     private void askForConfirmation() {
@@ -123,10 +128,35 @@ public class BoardFragment extends Fragment{
         return scoreTV;
     }
 
-    public void updateHealth(int dmgDone){
-        int actualHealth = this.healthTV.getProgress();
-        int newHealth = actualHealth - dmgDone;
-        this.healthTV.setProgress(newHealth);
+    public void updateHealth(int health){
+        if(health > this.health){
+            SoundManager.getInstance(getActivity()).playPowerUpSound();
+        } else {
+            SoundManager.getInstance(getActivity()).playHitSound();
+        }
+        this.health = health;
+        this.healthTV.setProgress(health);
+    }
+
+    private void drawShip(){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+        Bitmap shipBitmap;
+
+        if(ship == ShipType.BATMOBILE){
+            shipBitmap = ShipDialog.replaceGreenColor(BitmapFactory.decodeResource(getContext().getResources(),
+                    R.drawable.batmobile, options), color);
+
+        }else if(ship == ShipType.OCTANE){
+            shipBitmap = ShipDialog.replaceGreenColor(BitmapFactory.decodeResource(getContext().getResources(),
+                    R.drawable.octane, options), color);
+        } else {
+            shipBitmap = ShipDialog.replaceGreenColor(BitmapFactory.decodeResource(getContext().getResources(),
+                    R.drawable.marauder, options), color);
+        }
+
+
+        shipTV.setImageBitmap(shipBitmap);
     }
 
 

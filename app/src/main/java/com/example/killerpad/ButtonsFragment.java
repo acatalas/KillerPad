@@ -48,10 +48,7 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
 
         this.activity = (PadActivity)getActivity();
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        boardFragment = (BoardFragment) fm.findFragmentById(R.id.board_container);
-
-
+        boardFragment = (BoardFragment) activity.getBoardFragment();
 
         return v;
     }
@@ -83,8 +80,6 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
             else{
                 this.bullets--;
             }
-
-
 
         }
     }

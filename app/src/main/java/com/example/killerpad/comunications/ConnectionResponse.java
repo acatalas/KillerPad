@@ -11,10 +11,6 @@ public class ConnectionResponse {
     private String userName;
     private ShipType shipType;
 
-    public enum ShipType {
-        MARAUDER, BATMOBILE, OCTANE
-    }
-
     public ConnectionResponse() {
 
     }
