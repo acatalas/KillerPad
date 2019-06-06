@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/whiteSemi">
+
+    <TextView
+        android:id="@+id/userTV"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/red"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/scoreTV"
+        android:layout_width="476dp"
+        android:layout_height="159dp"
+        android:background="@color/colorPrimaryDark"
+        android:text=" SCORE: 0"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/userTV"
+        app:layout_constraintTop_toTopOf="@+id/userTV" />
+
+    <ImageView
+        android:id="@+id/shipTV"
+        android:layout_width="92dp"
+        android:layout_height="93dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="46dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/scoreTV"
+        app:layout_constraintTop_toTopOf="@+id/scoreTV" />
+
+    <ImageView
+        android:id="@+id/bullet1TV"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="52dp"
+        android:background="@drawable/bullet"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/shipTV"
+        app:layout_constraintTop_toBottomOf="@+id/healthTV" />
+
+    <ImageView
+        android:id="@+id/bullet2TV"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="52dp"
+        android:background="@drawable/bullet"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/bullet1TV"
+        app:layout_constraintTop_toBottomOf="@+id/healthTV" />
+
+    <ImageView
+        android:id="@+id/bullet3TV"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="52dp"
+        android:background="@drawable/bullet"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/bullet2TV"
+        app:layout_constraintTop_toBottomOf="@+id/healthTV" />
+
+    <ImageView
+        android:id="@+id/bullet4TV"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="52dp"
+        android:background="@drawable/bullet"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/bullet3TV"
+        app:layout_constraintTop_toBottomOf="@+id/healthTV" />
+
+    <ImageView
+        android:id="@+id/bullet5TV"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="52dp"
+        android:background="@drawable/bullet"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/bullet4TV"
+        app:layout_constraintTop_toBottomOf="@+id/healthTV" />
+
+    <ProgressBar
+        android:id="@+id/healthTV"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="150dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:progress="100"
+        android:progressTint="@color/darkGreen"
+        app:layout_constraintEnd_toEndOf="@+id/scoreTV"
+        app:layout_constraintStart_toStartOf="@+id/scoreTV"
+        app:layout_constraintTop_toTopOf="@+id/scoreTV" />
+
+    <ProgressBar
+        android:id="@+id/extraHealthTV"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="150dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:progress="100"
+        android:progressTint="@color/yellow"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/scoreTV"
+        app:layout_constraintStart_toStartOf="@+id/scoreTV"
+        app:layout_constraintTop_toTopOf="@+id/scoreTV" />
+
+    <TextView
+        android:id="@+id/reloadTV"
+        android:layout_width="225dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="52dp"
+        android:text="Reloading..."
+        android:visibility="invisible"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/bullet1TV"
+        app:layout_constraintTop_toBottomOf="@+id/extraHealthTV" />
+
+
+</android.support.constraint.ConstraintLayout>

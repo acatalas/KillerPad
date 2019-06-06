@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/send"
+        android:layout_width="92dp"
+        android:layout_height="92dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/round_color_picker"
+        android:text="@string/shoot"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/disabledSend"
+        android:layout_width="92dp"
+        android:layout_height="92dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/round_color_picker"
+        android:visibility="invisible"
+        android:text="Disabled"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/dash"
+        android:layout_width="73dp"
+        android:layout_height="73dp"
+        android:layout_marginEnd="68dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/round_color_picker"
+        android:text="@string/dash"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/send"
+        app:layout_constraintEnd_toStartOf="@+id/send" />
+
+</android.support.constraint.ConstraintLayout>
