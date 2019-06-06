@@ -1,22 +1,18 @@
 <resources>
     <string name="app_name">KillerPad</string>
-    <string name="menu">Menu</string>
     <string name="joystick">Joystick</string>
-    <string name="buttons">Buttons</string>
     <string name="start_game">START GAME</string>
     <string name="usuario">Usuario</string>
     <string name="ip">IP</string>
     <string name="puerto">Puerto</string>
-    <string name="exit">Exit</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="ship_select">Selecciona tu nave</string>
     <string name="accept_connection">Accept connection</string>
     <string name="error_connexion">Error en la conexión.</string>
     <string name="error_game_started">No se puede conectar a una partida empezada.</string>
     <string name="exit_game_confirmation">¿Seguro que quieres volver al menú?</string>
     <string name="exit_info">Esta acción finalizará tu partida actual.</string>
-    <string name="connecting">Connecting...</string>
+    <string name="connecting">Connecting…</string>
     <string name="splash_background">Splash screen background.</string>
     <string name="killer_pad_logo">Killer Pad logo.</string>
     <string name="accept_button">Accept</string>

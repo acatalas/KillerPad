@@ -30,8 +30,8 @@ public class ColorPickerDialog extends Dialog {
 
         private Paint mPaint;
         private Paint mCenterPaint;
-        private final int[] mColors;
         private OnColorChangedListener mListener;
+        private final int[] mColors;
         private boolean mTrackingCenter;
         private boolean mHighlightCenter;
 

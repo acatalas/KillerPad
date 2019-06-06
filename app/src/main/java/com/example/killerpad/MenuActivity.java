@@ -38,23 +38,4 @@ public class MenuActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
     }
-
-
-    // carga las preferencias de las shared preferences
-    public String loadPreferences(String key, String defaultValue){
-        SharedPreferences prefs = getSharedPreferences("savedPrefs", MODE_PRIVATE);
-        String restoredText = prefs.getString(key, defaultValue);
-        return restoredText;
-    }
-
-    // guarda las configuraciones de las shared preferences
-    public void savePreferences(String key, String value){
-        SharedPreferences.Editor sp;
-        sp = getSharedPreferences("savedPrefs", MODE_PRIVATE).edit();    // pq es "s"
-        sp.putString(key, value);
-        sp.commit();
-    }
-
-
-
 }

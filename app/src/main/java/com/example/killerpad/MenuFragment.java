@@ -121,16 +121,6 @@ public class MenuFragment extends Fragment{
         return v;
     }
 
-    //almacena el surfaceview (ShipView) y utilizando su método para actualizar el color de la nave
-    // pasando por parámetro el color recuperado de shared preferences
-    /*public void updateShipViewColor(){
-        ShipView shipView = ((ShipView) ((MenuActivity)getActivity()).findViewById(R.id.shipView));
-        shipView.updateColor((String) getContext()
-                .getSharedPreferences("savedPrefs",Context.MODE_PRIVATE)
-                .getString("color","ffffff"));
-    }*/
-
-
     //invocado por showConfigDialog() para rellenar los campos (user,ip,puerto)
     // con la última configuración (sharedpreferences).
     private void loadConfigurationDialog() {
@@ -151,9 +141,9 @@ public class MenuFragment extends Fragment{
         etPort = this.configurationDialog.findViewById(R.id.puerto);
 
         // carga las configuraciones con las shared preferences
-        setConnectionFields(etUsername,"user", "User");
-        setConnectionFields(etIp,"ip", "192.168.0.162");
-        setConnectionFields(etPort,"port", "8000");
+        setConnectionFields(etUsername, SharedPreferencesManager.USER_KEY, "User");
+        setConnectionFields(etIp, SharedPreferencesManager.IP_KEY, "192.168.0.162");
+        setConnectionFields(etPort,SharedPreferencesManager.PORT_KEY, "8000");
 
         //añade los listener para los botones aceptar y cancelar.
         bAceptar.setOnClickListener(new PadActivityListener());
@@ -210,7 +200,7 @@ public class MenuFragment extends Fragment{
     // pasado una clave y un editText, utilizando loadPreferences carga el valor de la clave
     // y lo carga en el editText.
     private void setConnectionFields(EditText et, String key, String defaultValue) {
-        et.setText(((MenuActivity) getActivity()).loadPreferences(key, defaultValue));
+        et.setText(SharedPreferencesManager.getString(getContext(), key, defaultValue));
     }
 
     //Color listener class

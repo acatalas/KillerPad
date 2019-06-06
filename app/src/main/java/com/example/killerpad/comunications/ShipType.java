@@ -1,5 +1,9 @@
 package com.example.killerpad.comunications;
 
+/**
+ * @author Alejandra
+ * Class that represents the three different type of ships and their respective health values
+ */
 public enum ShipType {
     MARAUDER("MARAUDER", 150 ),
     BATMOBILE("BATMOBILE", 30),

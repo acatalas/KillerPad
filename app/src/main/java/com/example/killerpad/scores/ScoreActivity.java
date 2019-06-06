@@ -10,9 +10,13 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeMap;
 
+/**
+ * @author Alejandra
+ * Activity with all the logic of the scores screen, used to display the top ten scores achieved
+ * on the device and the respective score (number of kills)
+ */
 public class ScoreActivity extends Activity {
 
-    private Set<String> scores;
     private TreeMap<Integer, String> orderedScores;
 
     private RecyclerView recyclerView;
@@ -25,15 +29,13 @@ public class ScoreActivity extends Activity {
         setContentView(R.layout.activity_scores);
         recyclerView = findViewById(R.id.score_list);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
+        // since the score won't be changes while in the score screen, improves performance
+        // by setting fixed size
         recyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
-        scores = SharedPreferencesManager.getScores(this);
 
         //Initialize with custom comparator to show reverse order
         orderedScores = new TreeMap<>(new Comparator<Integer>() {
@@ -43,13 +45,18 @@ public class ScoreActivity extends Activity {
             }
         });
 
-        //saves the scores to the
-        orderedScores.putAll(mapSetToTable(scores));
+        //saves the scores into the treemap, giving them order
+        orderedScores.putAll(mapSetToTable(SharedPreferencesManager.getScores(this)));
 
-        // specify an adapter (see also next example)
+        // specify an adapter
         adapter = new ScoreAdapter(orderedScores);
         recyclerView.setAdapter(adapter);
     }
+
+    /**
+     * Maps the set containing a string with the score and the user that obtained it, to
+     * a TreeMap containing the score as key, and username as value
+     */
 
     private TreeMap<Integer, String> mapSetToTable(Set<String> set){
         TreeMap<Integer, String> scoreTable = new TreeMap<>();
@@ -58,7 +65,7 @@ public class ScoreActivity extends Activity {
 
         for(String score : set){
             userName = score.split(",")[1];
-            punct = new Integer(score.split(",")[0]);
+            punct = Integer.valueOf(score.split(",")[0]);
             scoreTable.put(punct, userName);
         }
         return scoreTable;

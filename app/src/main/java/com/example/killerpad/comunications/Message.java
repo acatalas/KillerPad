@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
+/**
+ * Class that builds the message, main object that is sent and received by the handler
+ * This class was created by Marc, and ported to the pad
+ */
 @JsonInclude(Include.NON_DEFAULT)
 public class Message {
     public static final String PAD_CONNECTED = "padConnected";
@@ -13,7 +17,6 @@ public class Message {
 
     public static final String ACTION_COMMAND = "action";
     public static final String STATUS_REQUEST = "ok";
-    public static final String DAMAGE_COMMAND = "pad_damage";
     public static final String DEATH_COMMAND = "pad_dead";
     public static final String KILL_COMMAND = "pad_kill";
     public static final String MOVEMENT_COMMAND = "pad_move";
@@ -75,22 +78,30 @@ public class Message {
 
     public int getHealth() { return health; }
 
+    /**
+     * Converts a JSON string into the message object
+     * @param jsonStr String containing a JSON representation of the object
+     * @return message object with all the information
+     */
     public static Message readMessage(final String jsonStr) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(jsonStr, Message.class);
         } catch (IOException ex) {
-            System.out.println(ex.getMessage());
             return Message.Builder.builder(EMPTY_STRING, EMPTY_STRING).build();
         }
     }
 
+    /**
+     * Converts a Message object to JSON string
+     * @param message Message object
+     * @return String with the information in the message object
+     */
     public static String convertMessageToJson(final Message message) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(message);
         } catch (Exception ex) {
-            System.out.println("Error al convertir mensaje a Json");
         }
         return EMPTY_STRING;
     }

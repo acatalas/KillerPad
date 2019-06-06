@@ -27,7 +27,7 @@ public class SharedPreferencesManager {
     public static void saveString(Context context, String key, String value){
         sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        editor.putString(key, value).commit();
+        editor.putString(key, value).apply();
     }
 
     public static Set<String> getScores(Context context){

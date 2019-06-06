@@ -10,13 +10,15 @@ import android.widget.TextView;
 import com.example.killerpad.R;
 import java.util.TreeMap;
 
+/**
+ * @author Alejandra
+ * Adapter class to automatically generate the list of scores
+ */
 public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder> {
     private final TreeMap<Integer, String> data;
     private final Integer[] keys;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
+    //ViewHolder that maps the fields where the data will be placed
     public static class ScoreViewHolder extends RecyclerView.ViewHolder {
         public TextView tvUser;
         public TextView tvScore;
@@ -27,6 +29,10 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
         }
     }
 
+    /**
+     * Adapter for the recycled view found in the score activity
+     * @param map
+     */
     public ScoreAdapter(TreeMap<Integer, String> map) {
         data = map;
         keys = data.keySet().toArray(new Integer[data.size()]);
@@ -46,11 +52,15 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
         scoreViewHolder.tvScore.setText(keys[i] + "");
     }
 
+    /**
+     * Gets the score found in the position passed by parameter
+     * @param position Position in the list of an element
+     * @return Id (score) of the item
+     */
     @Override
     public long getItemId(int position) {
         return keys[position];
     }
-
 
     @Override
     public int getItemCount() {

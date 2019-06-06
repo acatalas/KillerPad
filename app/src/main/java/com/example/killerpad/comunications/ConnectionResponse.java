@@ -3,6 +3,10 @@ package com.example.killerpad.comunications;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+/**
+ * Class that builds the connection response, sent when the pad is connected to the killerGame.
+ * This class was created by Marc, and ported to the pad
+ */
 @JsonInclude(Include.NON_DEFAULT)
 public class ConnectionResponse {
 
@@ -39,8 +43,6 @@ public class ConnectionResponse {
     }
 
     public static class Builder {
-
-        private boolean right;
         private int originPort;
         private String color;
         private String userName;

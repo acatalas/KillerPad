@@ -5,14 +5,9 @@
     <color name ="whiteSemi">#4FFFFFFF</color>
     <color name="colorAccent">#EC407A</color>
     <color name="red">#FF0000</color>
-    <color name="lime">#A7FF18</color>
-    <color name="orange">#FFA900</color>
     <color name="fuchsia">#EC407A</color>
-    <color name="aquaMarine">#11bfb9</color>
     <color name="white">#FFFFFF</color>
     <color name="yellow">#F0EB3B</color>
-    <color name="purple">#6E28E0</color>
-    <color name="blue">#7AAEF9</color>
     <color name="lightGrey">#E6E6E6</color>
     <color name="darkGrey">#111111</color>
     <color name="semiTransparentWhite">#CCFFFFFF</color>

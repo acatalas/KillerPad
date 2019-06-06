@@ -1,7 +1,6 @@
 package com.example.killerpad.comunications;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 import com.example.killerpad.PadActivity;
 import com.example.killerpad.R;
@@ -15,8 +14,10 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import static android.content.Context.MODE_PRIVATE;
-
+/**
+ * @author Alejandra
+ * Class that handles the connection to the killergame
+ */
 public class PadHandler implements Runnable {
     private PadActivity padActivity;
     private Socket socket;
@@ -43,9 +44,11 @@ public class PadHandler implements Runnable {
     }
     public boolean isConnected() {return connected;}
 
+    /**
+     * Sets the connection to the killer game
+     */
     public void setConnection() {
 
-        // Mientras no hay conexión intentar conectarse...
         while (this.socket == null) {
             try {
                 socket = new Socket(this.recieverIp, this.port);
@@ -55,36 +58,41 @@ public class PadHandler implements Runnable {
             }
         }
 
+        //Sets the ip of the device running the game
         senderId = socket.getLocalAddress().getHostAddress();
 
         try {
+            //Opens the streams
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+
+            //Sets timeout
             socket.setSoTimeout(3500);
         } catch (IOException e) {
             socket = null;
             Log.d("HANDLER_SET_TIMEOUT", e.toString());
         }
 
-        connected = true;
+        connected = true; //Connected is now true
     }
 
-    //Comienza el hilo y entra en setConnection donde intentará establecer conexión
-    // y crear los elementos necesarios (socket, printwriter, bufferedreader, etc) para
-    // mantener la comunicación entre servidor y cliente.
+    /**
+     * Comienza el hilo y entra en setConnection donde intentará establecer conexión
+     * y crear los elementos necesarios (socket, printwriter, bufferedreader, etc) para
+     * mantener la comunicación entre servidor y cliente.
+     * */
     @Override
     public void run() {
 
-        setConnection();
+        setConnection(); //Sets the socket
 
-        sendConnectionMessage();
+        sendConnectionMessage(); //Sends initial connection message
 
         //El hilo entra en este bucle de comunicación determinado por la variable "alive"
         while (alive) {
             try {
-                //Con el método listenServer escucha e interpreta los mensajes del servidor.
                 listenServer();
-                sendTimeoutMessage();
+                sendTimeoutMessage(); //Sends timeout message every 100 ms
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 Log.d("HANDLER_ERROR_ALIVE", e.toString());
@@ -93,41 +101,9 @@ public class PadHandler implements Runnable {
 
     }
 
-    //Método que se invoca cuando se recibe el mensaje "ded" para indicar la muerte del usuario.
-    //Irá actualizando la cuenta atrás de 10  a 0 a cada segundo pasado utilizando el método cuentaAtras.
-    /*private void cuentaAtras() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        for (int i = 10; i >= 0; i--) {
-            padActivity.cuentaAtras();
-            try {
-                Thread.sleep(1100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
-
-    // Método para cerrar la conexión entre servidor y cliente. Envia un mensaje avisando al servidor
-    public void disconnect() {
-
-        alive = false;
-
-        try {
-            if (this.socket != null) {
-                sendDisconnectMessage();
-                this.socket.close();
-                this.socket = null;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    /**
+     * Reads the messages sent to the server
+     */
     public void listenServer() {
 
         try {
@@ -138,16 +114,18 @@ public class PadHandler implements Runnable {
                 processGameMessage(data);
             }
 
-            //Si salta excepción se notifica al user.
         } catch (IOException e) {
 
             Log.d("HANDLER_ERROR_READ", e.getMessage());
-            this.padActivity.showAlertDialog(R.string.error_connexion);//OK
+            this.padActivity.showAlertDialog(R.string.error_connexion);
             disconnect();
         }
     }
 
-    //Implementa el protocolo de aplicación, discrimina los mensajes y gestiona el comando.
+    /**
+     * Reads the incoming messages and decides what to do
+     * @param data Line read from input stream
+     */
     private void processGameMessage(String data) {
         //Ignore status requests
         if(data.equalsIgnoreCase(Message.STATUS_REQUEST)){
@@ -175,7 +153,6 @@ public class PadHandler implements Runnable {
             case Message.HEALTH_COMMAND:
                 padActivity.setHealth(message.getHealth());
                 padActivity.vibrar(300);
-                SoundManager.getInstance(padActivity.getApplicationContext()).playHitSound();
                 break;
 
             case Message.DEATH_COMMAND: // morir
@@ -196,18 +173,22 @@ public class PadHandler implements Runnable {
         }
     }
 
+    /**
+     * Sends the connection message with the ship type, the color and the username to the ip
+     * of the killergame, and specifying the pad's IP address
+     */
     private void sendConnectionMessage() {
         Context context = padActivity.getApplicationContext();
-        String color = SharedPreferencesManager.getString(context,
+
+        String color = SharedPreferencesManager.getString(context, //Gets color
                 SharedPreferencesManager.COLOR_KEY,
                 "#FF0000");
 
-        String shipType = SharedPreferencesManager.getString(context,
+        String shipType = SharedPreferencesManager.getString(context,   //Gets the type of ship
                 SharedPreferencesManager.SHIP_KEY,
-                ShipType.BATMOBILE.name());
+                ShipType.OCTANE.name());
 
-        //Envia un mensaje utilizando el protocolo de la aplicación para crear un mando nuevo
-        // mandando como parámetros el usuario, el color y la ip destino y origen
+        //Send the message by creating the message object with the connectionResponse object inside
         Message message = Message.Builder
                 .builder(Message.CONNECTION_FROM_PAD, senderId)
                 .withReceiverId(recieverIp)
@@ -217,22 +198,31 @@ public class PadHandler implements Runnable {
                         .withShipType(ShipType.valueOf(shipType)).build())
                 .build();
 
-        //Convierte el mensaje a JSON
+        //Convert message to JSON
         String json = Message.convertMessageToJson(message);
         Log.d("HANDLER_SEND", json);
         out.println(json);
     }
 
+    /**
+     * Sends the timeout message to inform the killer game that the pad is still connected
+     */
     private void sendTimeoutMessage() {
         out.println(Message.STATUS_REQUEST);
     }
 
+    /**
+     * Sends a disconnection message to the killer game
+     */
     private void sendDisconnectMessage(){
         out.println(Message.DISCONNECTION_COMMAND);
         Log.d("HANDLER_SEND", Message.DISCONNECTION_COMMAND);
     }
 
-    //Envia una accion al mando
+    /**
+     * Sends an action that doesn't require any additional parameters except fot the action itself
+     * @param action KillerAction to send
+     */
     public void sendKillerAction(String action){
         Message message = Message.Builder.builder(Message.ACTION_COMMAND, senderId)
                 .withAction(KillerAction.Builder.builder(action).build())
@@ -244,6 +234,12 @@ public class PadHandler implements Runnable {
         out.println(json);
     }
 
+    /**
+     * Sends a killer action that requires the speed values
+     * @param action KillerAction to send
+     * @param xSpeed Speed on x axis
+     * @param ySpeed Speed on y axis
+     */
     public void sendKillerAction(String action, float xSpeed, float ySpeed){
         Message message = Message.Builder.builder(Message.ACTION_COMMAND, senderId)
                 .withAction(KillerAction.Builder.builder(action)
@@ -256,6 +252,23 @@ public class PadHandler implements Runnable {
         Log.d("HANDLER_SEND", json);
 
         out.println(json);
+    }
+
+    /**
+     * Sens the disconnection message and closes the socket
+     */
+    public void disconnect() {
+
+        alive = false;
+
+        try {
+            if (this.socket != null) {
+                sendDisconnectMessage();
+                this.socket.close();
+                this.socket = null;
+            }
+        } catch (IOException e) {
+        }
     }
 
 }
