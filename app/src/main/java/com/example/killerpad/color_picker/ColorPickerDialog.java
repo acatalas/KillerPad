@@ -121,7 +121,7 @@ public class ColorPickerDialog extends Dialog {
 
         /**
          * Gets the selected color using the position
-         * @param colors 
+         * @param colors
          * @param unit
          * @return
          */
