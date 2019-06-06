@@ -16,31 +16,38 @@ import android.view.View;
 
 import com.example.killerpad.R;
 
+/**
+ * @author Alejandra
+ * Dialog that implements all the logic for the color picker
+ */
 public class ColorPickerDialog extends Dialog {
 
     private OnColorChangedListener listener;
     private int initialColor;
 
+    /**
+     * Draws the color wheel and adds the logic
+     */
     private static class ColorPickerView extends View {
-        private final int CENTER_X = dpToPx(126);
-        private final int CENTER_Y = dpToPx(126);
-        private final int CENTER_RADIUS = dpToPx(40);
-        private final int MARGIN = dpToPx(8);
+        private final int CENTER_X = dpToPx(126);   //x coordinates of the center of the dialog
+        private final int CENTER_Y = dpToPx(126);   //y coordinates of the center of the dialog
+        private final int CENTER_RADIUS = dpToPx(40);   //Radius of center circle
+        private final int MARGIN = dpToPx(8);       //Margin between colorPicker and dialog bounds
         private final float PI = 3.1415926f;
 
-        private Paint mPaint;
-        private Paint mCenterPaint;
-        private OnColorChangedListener mListener;
-        private final int[] mColors;
-        private boolean mTrackingCenter;
-        private boolean mHighlightCenter;
+        private Paint outerCirclePaint;
+        private Paint innerCirclePaint;
+        private OnColorChangedListener colorListener;
+        private final int[] colors;
+        private boolean trackingCenter;
+        private boolean highlightCenter;
 
         ColorPickerView(Context context, OnColorChangedListener listener, int color) {
             super(context);
-            mListener = listener;
+            colorListener = listener;
 
             //Hex colors with alpha channel (red, pink, blue, cyan, green, yellow, red)
-            mColors = new int[] {
+            colors = new int[] {
                     0xFFFF0000, 0xFFFF00FF, 0xFF0000FF, 0xFF00FFFF, 0xFF00FF00,
                     0xFFFFFF00, 0xFFFF0000
             };
@@ -50,54 +57,59 @@ public class ColorPickerDialog extends Dialog {
             //cy; y coordinate of center
             //colors to be distributed around the center
             //positions: null means spaced evenly around
-            Shader shader = new SweepGradient(0, 0, mColors, null);
-            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mPaint.setShader(shader);
-            mPaint.setStyle(Paint.Style.STROKE);
-            mPaint.setStrokeWidth(dpToPx(55));
+            Shader shader = new SweepGradient(0, 0, colors, null);
+            outerCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            outerCirclePaint.setShader(shader);
+            outerCirclePaint.setStyle(Paint.Style.STROKE);
+            outerCirclePaint.setStrokeWidth(dpToPx(55));
 
-            mCenterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            innerCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
             //The center is painted with the selected color
-            mCenterPaint.setColor(color);
-            mCenterPaint.setStrokeWidth(5);
+            innerCirclePaint.setColor(color);
+            innerCirclePaint.setStrokeWidth(5);
         }
 
         @Override
         protected void onDraw(Canvas canvas) {
-            float radius = CENTER_X - mPaint.getStrokeWidth()*0.5f;
+            float radius = CENTER_X - outerCirclePaint.getStrokeWidth()*0.5f;
 
             //Position at center of screen
             canvas.translate(CENTER_X, CENTER_Y);
 
             //Draw outer circle
             canvas.drawOval(new RectF(-radius + MARGIN,
-                    -radius + MARGIN, radius - MARGIN, radius - MARGIN), mPaint);
+                    -radius + MARGIN, radius - MARGIN, radius - MARGIN), outerCirclePaint);
 
             //Draw inner circle
-            canvas.drawCircle(0, 0, CENTER_RADIUS, mCenterPaint);
+            canvas.drawCircle(0, 0, CENTER_RADIUS, innerCirclePaint);
 
             //If color is being selected
-            if (mTrackingCenter) {
-                int color = mCenterPaint.getColor();
-                mCenterPaint.setStyle(Paint.Style.STROKE);
+            if (trackingCenter) {
+                int color = innerCirclePaint.getColor();
+                innerCirclePaint.setStyle(Paint.Style.STROKE);
 
-                if (mHighlightCenter) {
-                    mCenterPaint.setAlpha(0xFF); //completely opaque
+                if (highlightCenter) {
+                    innerCirclePaint.setAlpha(0xFF); //completely opaque
                 } else {
-                    mCenterPaint.setAlpha(0x80); //semi transparent (half of 0xFF)
+                    innerCirclePaint.setAlpha(0x80); //semi transparent (half of 0xFF)
                 }
 
                 //Color in the center circle
                 canvas.drawCircle(0, 0,
-                        CENTER_RADIUS + mCenterPaint.getStrokeWidth(),
-                        mCenterPaint);
+                        CENTER_RADIUS + innerCirclePaint.getStrokeWidth(),
+                        innerCirclePaint);
 
-                mCenterPaint.setStyle(Paint.Style.FILL);
-                mCenterPaint.setColor(color);
+                innerCirclePaint.setStyle(Paint.Style.FILL);
+                innerCirclePaint.setColor(color);
             }
         }
 
+        /**
+         * Sets width and height of view
+         * @param widthMeasureSpec Width of color picker
+         * @param heightMeasureSpec Height of color picker
+         */
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             setMeasuredDimension(CENTER_X*2, CENTER_Y*2);
@@ -107,19 +119,29 @@ public class ColorPickerDialog extends Dialog {
             return s + java.lang.Math.round(p * (d - s));
         }
 
+        /**
+         * Gets the selected color using the position
+         * @param colors 
+         * @param unit
+         * @return
+         */
         private int interpColor(int colors[], float unit) {
+            //If 0, return first
             if (unit <= 0) {
                 return colors[0];
             }
+
+            //if 1, return last
             if (unit >= 1) {
                 return colors[colors.length - 1];
             }
 
+            //Multiply unit (0 ... 1) by num of colors (7)
             float p = unit * (colors.length - 1);
             int i = (int)p;
             p -= i;
 
-            // now p is just the fractional part [0...1) and i is the index
+            // now p is just the fractional part [0...1] and i is the index
             int c0 = colors[i];
             int c1 = colors[i+1];
             int a = ave(Color.alpha(c0), Color.alpha(c1), p);
@@ -132,41 +154,54 @@ public class ColorPickerDialog extends Dialog {
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
+            //Gets the "real" coordinates of x and y, (0,0) being the center of the circle
             float x = event.getX() - CENTER_X;
             float y = event.getY() - CENTER_Y;
+
+            //Calculates if the event was inside the inner circle's area
             boolean inCenter = Math.hypot(x, y) <= CENTER_RADIUS;
 
             switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    mTrackingCenter = inCenter;
-                    if (inCenter) {
-                        mHighlightCenter = true;
-                        invalidate();
+                case MotionEvent.ACTION_DOWN:   //When place finger on screen
+                    trackingCenter = inCenter;
+                    if (inCenter) {                 //If finger inside the circle
+                        highlightCenter = true;     //sets that the center circle should show a border
+                        invalidate();               //force redraw, to show the circle highlight
                         break;
                     }
-                case MotionEvent.ACTION_MOVE:
-                    if (mTrackingCenter) {
-                        if (mHighlightCenter != inCenter) {
-                            mHighlightCenter = inCenter;
+                case MotionEvent.ACTION_MOVE:               //when finger moved
+                    if (trackingCenter) {                   //if it is in center
+                        if (highlightCenter != inCenter) {  //and it wasn't in center before, or is now
+                            highlightCenter = inCenter;     //draw highlight, or don't
                             invalidate();
                         }
                     } else {
-                        float angle = (float)Math.atan2(y, x);
+
+                        //Returns the angle between the two coordinates and the positive x plane
+                        //For example:
+                        //x = 0, y = any positive        90
+                        //x = 0, y = any negative       -90
+                        //x = any positive, y = 0         0
+                        //x = any negative, y = 0       180
+                        float angleInRadians = (float)Math.atan2(y, x);
+
                         // need to turn angle [-PI ... PI] into unit [0....1]
-                        float unit = angle/(2*PI);
+                        float unit = angleInRadians/(2*PI);
                         if (unit < 0) {
                             unit += 1;
                         }
-                        mCenterPaint.setColor(interpColor(mColors, unit));
+
+                        innerCirclePaint.setColor(interpColor(colors, unit)); //Paint inner circle
                         invalidate();
                     }
                     break;
-                case MotionEvent.ACTION_UP:
-                    if (mTrackingCenter) {
+
+                    case MotionEvent.ACTION_UP:
+                    if (trackingCenter) {
                         if (inCenter) {
-                            mListener.colorChanged(mCenterPaint.getColor());
+                            colorListener.colorChanged(innerCirclePaint.getColor());
                         }
-                        mTrackingCenter = false;    // so we draw w/o halo
+                        trackingCenter = false;    // so we draw without highlight
                         invalidate();
                     }
                     break;
