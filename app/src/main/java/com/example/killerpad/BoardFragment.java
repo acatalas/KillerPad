@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -29,6 +30,9 @@ public class BoardFragment extends Fragment{
     private ProgressBar healthTV;
     private ImageView shipTV;
     private ShipType ship;
+    private TextView reloadView;
+    private ProgressBar boostTV;
+    private int boost;
     private int health;
     private int color;
     private static String TAG = "handler";
@@ -47,6 +51,8 @@ public class BoardFragment extends Fragment{
         View v = inflater.inflate(R.layout.fragment_board, container, false);
 
         scoreTV = v.findViewById(R.id.scoreTV);
+
+        reloadView = v.findViewById(R.id.reloadTV);
 
         //Añadido la nave escogida al principio
         shipTV = v.findViewById(R.id.shipTV);
@@ -69,6 +75,9 @@ public class BoardFragment extends Fragment{
         }
 
         health = ship.getHealth();
+
+        boostTV = v.findViewById(R.id.boostTV);
+        boost = 100;
 
         drawShip();
 
@@ -116,11 +125,7 @@ public class BoardFragment extends Fragment{
 
     public void bulletCounter(int bullet){
         if (bullet == 0){
-            //buttonsFragment.setBullets(5);
-            //TODO ANIMACIÓN DE RECARGA Y SONIDO DE RECARGA
-
             for (int i = 0; i<this.bulletsList.length;i++ ) {
-                Log.i("Pad", "Bala nueva");
                 ImageView bulletView = (ImageView) getView().findViewById(bulletsList[i]);
                 bulletView.setVisibility(View.VISIBLE);
             }
@@ -172,6 +177,16 @@ public class BoardFragment extends Fragment{
 
 
         shipTV.setImageBitmap(shipBitmap);
+    }
+
+    public void reloadAnimation() {
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f,0.0f);
+        alphaAnimation.setDuration(2000);
+        reloadView.startAnimation(alphaAnimation);
+    }
+
+    public void updateBoost(int boost){
+        this.boostTV.setProgress(this.boost);
     }
 
 

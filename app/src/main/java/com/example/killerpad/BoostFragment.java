@@ -18,6 +18,8 @@ public class BoostFragment extends Fragment {
     private Button bBoost;
     private PadActivity activity;
     private PadHandler padHandler;
+    private BoardFragment boardFragment;
+    private int counter = 100;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,8 @@ public class BoostFragment extends Fragment {
 
         this.activity = (PadActivity)getActivity();
 
+        boardFragment = (BoardFragment) activity.getBoardFragment();
+
         return v;
     }
 
@@ -59,15 +63,16 @@ public class BoostFragment extends Fragment {
         public boolean onTouch(View v, MotionEvent event) {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
 
+                counter--;
                 padHandler.sendKillerAction(Message.TURBO_START_COMMAND);
                 SoundManager.getInstance(getActivity()).startTurboSound();
 
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-
+                counter++;
                 padHandler.sendKillerAction(Message.TURBO_END_COMMAND);
                 SoundManager.getInstance(getActivity()).stopTurboSound();
             }
-
+            boardFragment.updateBoost(counter);
             return true;
         }
 

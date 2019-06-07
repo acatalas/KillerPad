@@ -1,6 +1,7 @@
 package com.example.killerpad;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.example.killerpad.sound.SoundManager;
 public class ButtonsFragment extends Fragment implements View.OnClickListener {
     private Button bSend;
     private Button bDash;
+    private Button bDisabled;
     private PadActivity activity;
     private PadHandler handler;
     private SoundManager soundManager;
@@ -46,6 +48,9 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
         this.bDash = v.findViewById(R.id.dash);
         bDash.setOnClickListener(this);
 
+        this.bDisabled = v.findViewById(R.id.disabledSend);
+        bDisabled.setOnClickListener(this);
+
         this.activity = (PadActivity)getActivity();
 
         boardFragment = (BoardFragment) activity.getBoardFragment();
@@ -70,17 +75,41 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
             soundManager.playDashSound();
         }
         //botón de disparo
-         else if (button == R.id.send) {
+        else if (button == R.id.send) {
             this.handler.sendKillerAction(Message.SHOOT_COMMAND);
             soundManager.playShootSound();
-            boardFragment.bulletCounter(this.bullets);
             if(bullets==0){
-                setBullets(5);
+                boardFragment.reloadAnimation();
+                soundManager.playReloadSound();
+                bSend.setVisibility(View.INVISIBLE);
+                bDisabled.setVisibility(View.VISIBLE);
+
+                //Duerme la ejecución hasta que se acaba la animación
+                new CountDownTimer(2000,100) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        System.out.println("Intervalo");
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        System.out.println("Sigo la ejecución");
+                        bDisabled.setVisibility(View.INVISIBLE);
+                        boardFragment.bulletCounter(bullets);
+                        bSend.setVisibility(View.VISIBLE);
+                        setBullets(5);
+                    }
+                }.start();
             }
             else{
+                boardFragment.bulletCounter(this.bullets);
                 this.bullets--;
             }
 
+        }
+        //boton que solo se muestra cuando se está ejecutando la animación de recarga
+        else if (button == R.id.disabledSend){
+            soundManager.playNoBulletSound();
         }
     }
 

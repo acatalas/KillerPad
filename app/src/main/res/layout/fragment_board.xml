@@ -130,5 +130,32 @@
         app:layout_constraintStart_toStartOf="@+id/scoreTV"
         app:layout_constraintTop_toTopOf="@+id/scoreTV" />
 
+    <ProgressBar
+        android:id="@+id/boostTV"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="150dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="28dp"
+        android:progress="100"
+        android:progressTint="@color/orange"
+        app:layout_constraintEnd_toEndOf="@+id/scoreTV"
+        app:layout_constraintStart_toStartOf="@+id/scoreTV"
+        app:layout_constraintTop_toTopOf="@+id/scoreTV" />
+
+    <TextView
+        android:id="@+id/reloadTV"
+        android:layout_width="225dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="52dp"
+        android:text="Reloading..."
+        android:visibility="invisible"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/bullet1TV"
+        app:layout_constraintTop_toBottomOf="@+id/extraHealthTV" />
+
 
 </android.support.constraint.ConstraintLayout>
