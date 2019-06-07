@@ -93,7 +93,7 @@ public class PadHandler implements Runnable {
             try {
                 listenServer();
                 sendTimeoutMessage(); //Sends timeout message every 100 ms
-                Thread.sleep(100);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 Log.d("HANDLER_ERROR_ALIVE", e.toString());
             }
@@ -152,7 +152,7 @@ public class PadHandler implements Runnable {
 
             case Message.HEALTH_COMMAND:
                 padActivity.setHealth(message.getHealth());
-                padActivity.vibrar(300);
+                padActivity.vibrar(100);
                 break;
 
             case Message.DEATH_COMMAND: // morir

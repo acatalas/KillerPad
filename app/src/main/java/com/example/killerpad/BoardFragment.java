@@ -59,8 +59,15 @@ public class BoardFragment extends Fragment{
                         SharedPreferencesManager.SHIP_KEY,
                         ShipType.OCTANE.name()));
 
+
+
         healthTV = v.findViewById(R.id.healthTV);
-        healthTV.setMax(ship.getHealth());
+
+        if(ship != ShipType.MARAUDER){
+
+            healthTV.setMax(ship.getHealth());
+        }
+
         health = ship.getHealth();
 
         drawShip();
@@ -134,8 +141,16 @@ public class BoardFragment extends Fragment{
         } else {
             SoundManager.getInstance(getActivity()).playHitSound();
         }
+
+        if(ship == ShipType.MARAUDER){
+            this.healthTV.setProgress((int)(health / (float)ShipType.MARAUDER.getHealth()) * 100);
+
+        } else {
+            this.healthTV.setProgress(health);
+        }
+
         this.health = health;
-        this.healthTV.setProgress(health);
+
     }
 
     private void drawShip(){
