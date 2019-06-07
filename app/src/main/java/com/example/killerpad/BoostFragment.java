@@ -2,6 +2,7 @@ package com.example.killerpad;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -63,18 +64,29 @@ public class BoostFragment extends Fragment {
         public boolean onTouch(View v, MotionEvent event) {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
 
-                counter--;
+//                new CountDownTimer(2000,100) {
+//                    @Override
+//                    public void onTick(long millisUntilFinished) {
+//                        System.out.println("Intervalo");
+//                        if(event.getAction() == MotionEvent.ACTION_UP)
+//                        this.cancel();
+//                    }
+//
+//                    @Override
+//                    public void onFinish() {
+//
+//                    }
+//                }.start();
                 padHandler.sendKillerAction(Message.TURBO_START_COMMAND);
                 SoundManager.getInstance(getActivity()).startTurboSound();
 
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                counter++;
+                //counter++;
                 padHandler.sendKillerAction(Message.TURBO_END_COMMAND);
                 SoundManager.getInstance(getActivity()).stopTurboSound();
             }
-            boardFragment.updateBoost(counter);
+            //boardFragment.updateBoost(counter);
             return true;
         }
-
     }
 }
