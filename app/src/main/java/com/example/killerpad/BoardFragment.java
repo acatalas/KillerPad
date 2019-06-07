@@ -143,7 +143,7 @@ public class BoardFragment extends Fragment{
         }
 
         if(ship == ShipType.MARAUDER){
-            this.healthTV.setProgress((int)(health / (float)ShipType.MARAUDER.getHealth()) * 100);
+            this.healthTV.setProgress((int)((health * 100) / ship.getHealth()));
 
         } else {
             this.healthTV.setProgress(health);
