@@ -115,8 +115,8 @@ public class ColorPickerDialog extends Dialog {
             setMeasuredDimension(CENTER_X*2, CENTER_Y*2);
         }
 
-        private int ave(int s, int d, float p) {
-            return s + java.lang.Math.round(p * (d - s));
+        private int ave(int previous, int next, float angle) {
+            return previous + java.lang.Math.round(angle * (next - previous));
         }
 
         /**
@@ -125,7 +125,7 @@ public class ColorPickerDialog extends Dialog {
          * @param unit
          * @return
          */
-        private int interpColor(int colors[], float unit) {
+        private int interpolateColor(int colors[], float unit) {
             //If 0, return first
             if (unit <= 0) {
                 return colors[0];
@@ -191,7 +191,7 @@ public class ColorPickerDialog extends Dialog {
                             unit += 1;
                         }
 
-                        innerCirclePaint.setColor(interpColor(colors, unit)); //Paint inner circle
+                        innerCirclePaint.setColor(interpolateColor(colors, unit)); //Paint inner circle
                         invalidate();
                     }
                     break;

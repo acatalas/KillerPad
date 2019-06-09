@@ -39,9 +39,6 @@ public class PadHandler implements Runnable {
         connected = false;
     }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
-    }
     public boolean isConnected() {return connected;}
 
     /**

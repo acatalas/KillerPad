@@ -3,6 +3,7 @@ package com.example.killerpad.comunications;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 
 /**
@@ -11,23 +12,25 @@ import java.io.IOException;
  */
 @JsonInclude(Include.NON_DEFAULT)
 public class Message {
-    public static final String PAD_CONNECTED = "padConnected";
-    public static final String PAD_NOT_CONNECTED = "padNotConnected";
-    public static final String CONNECTION_FROM_PAD = "pad-connect";
-
     public static final String ACTION_COMMAND = "action";
-    public static final String STATUS_REQUEST = "ok";
+    public static final String CONNECTION_FROM_PAD = "pad-connect";
+    public static final String DASH_COMMAND = "pad_dash";
     public static final String DEATH_COMMAND = "pad_dead";
+    public static final String DISCONNECTION_COMMAND = "bye";
+    private static final String EMPTY_STRING = "";
+    public static final String HEALTH_COMMAND = "pad_health";
     public static final String KILL_COMMAND = "pad_kill";
     public static final String MOVEMENT_COMMAND = "pad_move";
-    public static final String SHOOT_COMMAND = "pad_shoot";
-    public static final String DASH_COMMAND = "pad_dash";
-    public static final String HEALTH_COMMAND = "pad_health";
-    public static final String TURBO_START_COMMAND = "pad_turbo_start";
-    public static final String TURBO_END_COMMAND = "pad_turbo_end";
-    public static final String DISCONNECTION_COMMAND = "bye";
-    public static final String WIN_COMMAND = "pad_win";
+    public static final String PAD_CONNECTED = "padConnected";
+    public static final String PAD_NOT_CONNECTED = "padNotConnected";
     public static final String POWER_UP_COMMAND = "pad_powerup";
+    public static final String SHOOT_COMMAND = "pad_shoot";
+    public static final String STATUS_REQUEST = "ok";
+    public static final String TURBO_END_COMMAND = "pad_turbo_end";
+    public static final String TURBO_START_COMMAND = "pad_turbo_start";
+    public static final String WIN_COMMAND = "pad_win";
+
+
 
     private String command;
     private String senderId;
@@ -36,8 +39,6 @@ public class Message {
     private ConnectionResponse connectionResponse;
     private int damage;
     private int health;
-
-    private static final String EMPTY_STRING = "";
 
     public Message() {
     }
@@ -50,6 +51,36 @@ public class Message {
         this.connectionResponse = builder.connectionResponse;
         this.damage = builder.damage;
         this.health = builder.health;
+    }
+
+    /**
+     * Converts a JSON string into the message object
+     *
+     * @param jsonStr String containing a JSON representation of the object
+     * @return message object with all the information
+     */
+    public static Message readMessage(final String jsonStr) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(jsonStr, Message.class);
+        } catch (IOException ex) {
+            return Message.Builder.builder(EMPTY_STRING, EMPTY_STRING).build();
+        }
+    }
+
+    /**
+     * Converts a Message object to JSON string
+     *
+     * @param message Message object
+     * @return String with the information in the message object
+     */
+    public static String convertMessageToJson(final Message message) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(message);
+        } catch (Exception ex) {
+        }
+        return EMPTY_STRING;
     }
 
     public String getCommand() {
@@ -68,7 +99,7 @@ public class Message {
         return action;
     }
 
-    public ConnectionResponse getConnectionResponse(){
+    public ConnectionResponse getConnectionResponse() {
         return this.connectionResponse;
     }
 
@@ -76,34 +107,8 @@ public class Message {
         return damage;
     }
 
-    public int getHealth() { return health; }
-
-    /**
-     * Converts a JSON string into the message object
-     * @param jsonStr String containing a JSON representation of the object
-     * @return message object with all the information
-     */
-    public static Message readMessage(final String jsonStr) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(jsonStr, Message.class);
-        } catch (IOException ex) {
-            return Message.Builder.builder(EMPTY_STRING, EMPTY_STRING).build();
-        }
-    }
-
-    /**
-     * Converts a Message object to JSON string
-     * @param message Message object
-     * @return String with the information in the message object
-     */
-    public static String convertMessageToJson(final Message message) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(message);
-        } catch (Exception ex) {
-        }
-        return EMPTY_STRING;
+    public int getHealth() {
+        return health;
     }
 
     public static class Builder {
